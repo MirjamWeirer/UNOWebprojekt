@@ -93,15 +93,33 @@ function playGame(result) {
     console.log(result.Players[0].Cards[0].Color);
     console.log(result.Players[0].Cards[0].Color[0]);
 
+    showTopCard(result.TopCard);
+
     for (let i = 0; i < player.length; i++) {
         mapCards(result.Players[i]);
     }
+
     
 
     // think of sth like this:
     // for (let i = 0; i < player.length; i++) {
     //     mapCards(result.Players[i].Cards, i)
     // }
+}
+
+function showTopCard(card) {
+    // diesen code teil auslagern? gleich wie in map
+    const img = document.createElement("img");
+    let color;
+    if (card.Color == "Black") {
+        color = "";
+    } else {
+        color = `${card.Color}`;
+    }
+    let value = convertNumber(card.Value);
+
+    img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
+    const ablegen = document.getElementById("ablegen").appendChild(img);
 }
 
 function mapCards(player) {

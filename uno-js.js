@@ -30,6 +30,7 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
         console.log(player.length)
         console.log(player);
         modal.hide();
+        document.getElementById("desk").style.visibility='visible';
         startGame();
     } else {
         // Some action to prevent sending an empty name

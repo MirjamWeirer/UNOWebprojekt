@@ -85,7 +85,7 @@ async function load() {
 // load();
 
 // Game/PlayCard/{id}?value={value}&color={color}&wildColor={wildColor}
-async function playCard(card) {
+async function playCard(card, player) {
     console.log("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card[1] + "&color=" + card[0] + "&wildColor=")
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card[1] + "&color=" + card[0] + "&wildColor=", {
         method: 'PUT'
@@ -93,9 +93,11 @@ async function playCard(card) {
 
     if (response.ok) {
         let result = await response.json();
+        console.log("playcard")
         console.log(result);
         displayCurrentPlayer(result.Player);
         showTopCard(card[0], card[1]);
+        updateScore(player);
     } else {
         alert("HTTP-Error: " + response.status)
     }
@@ -244,14 +246,34 @@ function getCardToPlay(e) {
             console.log(e.target);
             console.log(e.currentTarget);
             if (checkCard(card[0], card[1]) == true) {
-                playCard(arr[arr.length - 1].split(".")[0].split("_"));
+                playCard(arr[arr.length - 1].split(".")[0].split("_"), e.currentTarget.parentNode.firstElementChild);
+                // GetCards/{id}?playerName={playerName}
                 e.currentTarget.removeChild(e.target.parentNode);
+                console.log( e.currentTarget.parentNode.firstElementChild);
+                // updateScore(e.currentTarget.parentNode.firstElementChild);
                 topCard = [];
             }
 
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
+}
+
+async function updateScore(player) {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + player.id, {
+        method: 'GET'
+    });
+
+    console.log("update")
+    console.log(player);
+    console.log(player.lastElementChild);
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(player.lastElementChild.textContent);
+        console.log(result.Score);
+        player.lastElementChild.textContent = "Points: " + result.Score;
+    }
 }
 
 function checkCard(color, value) {

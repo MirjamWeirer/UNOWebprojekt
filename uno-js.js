@@ -193,6 +193,27 @@ function mapCards(player) {
     const ul = document.createElement("ul");
     const appending = document.querySelector("#playground").appendChild(div).appendChild(ul);
 
+    ul.addEventListener("mouseover", function(e) {
+        // returns -1 (not working)
+        // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+        // console.log(index);
+        if (e.target != e.currentTarget) {
+            e.target.classList.toggle("mouseOver");
+        }
+        
+    })
+
+    ul.addEventListener("mouseout", function(e) {
+        // returns -1 (not working)
+        // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+        // console.log(index);
+        if (e.target != e.currentTarget) {
+            e.target.classList.toggle("mouseOver");
+        }
+    })
+
+    ul.addEventListener("click", getCardToPlay)
+
     return player.Cards.map(function(el) {
         const img = document.createElement("img");
         let color = switchColor(el.Color);
@@ -207,27 +228,15 @@ function mapCards(player) {
 
         // add event listener auf ul
 
-        listElement.addEventListener("mouseover", function(e) {
-            // returns -1 (not working)
-            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
-            // console.log(index);
-            e.target.classList.toggle("mouseOver");
-        })
-
-        listElement.addEventListener("mouseout", function(e) {
-            // returns -1 (not working)
-            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
-            // console.log(index);
-            e.target.classList.toggle("mouseOver");
-        })
-
-        listElement.addEventListener("click", getCardToPlay)
+        
     })
 }
 
 
 function getCardToPlay(e) {
     console.log(e.target.src);
+    console.log(e.target);
+    console.log(e.currentTarget);
             console.log(e.target.src.split("/"));
             let arr = e.target.src.split("/");
             console.log(arr.length - 1)
@@ -236,7 +245,7 @@ function getCardToPlay(e) {
             console.log(e.currentTarget);
             if (checkCard(card[0], card[1]) == true) {
                 playCard(arr[arr.length - 1].split(".")[0].split("_"));
-                e.currentTarget.parentNode.removeChild(e.currentTarget);
+                e.currentTarget.removeChild(e.target.parentNode);
                 topCard = [];
             }
 

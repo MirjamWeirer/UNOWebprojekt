@@ -12,7 +12,7 @@ Das ist unser super tolles Uno Projekt.
  - [x] Spieler*innennamen eingeben (nur unterschiedliche)
  - [x] Grundstruktur wie Daten gespeichert
  - [x] Spielstart vollständig (Karten am Tisch)
- - [ ] Button Listner für Karten
+ - [x] Button Listner für Karten
  - 18.11. Ziel:
  - [ ] Karten spielen
  - [ ] Karten hinzufügen/entfernen

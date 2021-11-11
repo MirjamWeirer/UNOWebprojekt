@@ -3,51 +3,66 @@ ul {
     margin: 0;
     padding: 0;
     display: inline-flex
-  }
+}
 
 .playerCards {
-  margin: 3px;
+    margin: 3px;
 }
 
 .playerDivs {
-  margin: 25px;
+    margin: 25px;
 }
 
 img {
-  width: 85px;
+    width: 85px;
 }
 
 .card {
-  padding-left: 15px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-right: 70px;
-  width: 75%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background: linear-gradient(.25turn, #75a4f0, #dae4f5 50%);
-  border: none;
+    padding-left: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-right: 70px;
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: linear-gradient(.25turn, #75a4f0, #dae4f5 50%);
+    border: none;
 }
 
 #left {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .test {
-  background-color: aquamarine;
-  border-radius: 10px;
-  margin-bottom: 10px;
+    background-color: aquamarine;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 .mouseOver {
-  transform: scale(1.2);
+    transform: scale(1.2);
 }
 
 #ziehen-ablegen {
-  transform: scale(1.4);
+    transform: scale(1.4);
 }
 
+.selected {
+    background: red;
+}
+
+#ablegen {
+    position: relative;
+    z-index: 0;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}

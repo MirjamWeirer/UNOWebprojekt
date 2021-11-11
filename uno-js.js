@@ -20,13 +20,13 @@ function checkName(value) {
     if (document.getElementById("player1").value == document.getElementById("player2").value) {
         document.getElementById("player2").value = "";
     } else if (document.getElementById("player1").value == document.getElementById("player3").value ||
-        document.getElementById("player2").value == document.getElementById("player3").value) {
+        document.getElementById("player2").value == document.getElaementById("player3").value) {
         document.getElementById("player3").value = "";
     } else if (document.getElementById("player1").value == document.getElementById("player4").value ||
         document.getElementById("player2").value == document.getElementById("player4").value ||
         document.getElementById("player3").value == document.getElementById("player4").value) {
         document.getElementById("player4").value = "";
-    } 
+    }
 }
 
 document.getElementById("playerNamesForm").addEventListener("submit", function(e) {
@@ -43,7 +43,7 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
         playerDivs.push(document.getElementById("player3cards"));
         playerDivs.push(document.getElementById("player4cards"));
 
-        
+
         // for (let i = 0; i < player.length; i++) {
         //    playerDivCombo[i].push(player[i], playerDivs[i]);
         // }
@@ -51,17 +51,17 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
         console.log(player.length)
         console.log(player);
         modal.hide();
-        document.getElementById("desk").style.visibility='visible';
+        document.getElementById("desk").style.visibility = 'visible';
         startGame();
     } else {
         // Some action to prevent sending an empty name
     }
 })
 
-async function load(){
+async function load() {
     // hier starten wir gleich den request
     // warten auf das promise (alternativ fetch, then notation)
-    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start",{
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
         method: 'POST',
         body: JSON.stringify(player),
         headers: {
@@ -70,14 +70,14 @@ async function load(){
     });
 
     // dieser code wird erst ausgeführt wenn fetch fertig ist
-    if(response.ok){ // wenn http-status zwischen 200 und 299 liegt
+    if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
         // wir lesen den response body 
         let result = await response.json(); // alternativ response.text wenn nicht json gewünscht ist
         playId = result.Id;
         playGame(result);
         // console.log(result);
         // alert(JSON.stringify(result));
-    }else{
+    } else {
         alert("HTTP-Error: " + response.status);
     }
 }
@@ -94,6 +94,8 @@ async function playCard(card) {
     if (response.ok) {
         let result = await response.json();
         console.log(result);
+        displayCurrentPlayer(result.Player);
+        showTopCard(card[0], card[1]);
     } else {
         alert("HTTP-Error: " + response.status)
     }
@@ -110,7 +112,7 @@ function playGame(result) {
     console.log(result.Players[0].Cards[0].Color);
     console.log(result.Players[0].Cards[0].Color[0]);
 
-    showTopCard(result.TopCard);
+    showTopCard(result.TopCard.Color, result.TopCard.Value);
 
     for (let i = 0; i < player.length; i++) {
         mapCards(result.Players[i]);
@@ -121,7 +123,7 @@ function playGame(result) {
     displayCurrentPlayer(result.NextPlayer);
 
 
-    
+
 
     // think of sth like this:
     // for (let i = 0; i < player.length; i++) {
@@ -132,14 +134,19 @@ function playGame(result) {
 function displayCurrentPlayer(player) {
     const div = document.getElementById("current");
     div.textContent = "Current Player: " + player;
+    for (let i = 0; i < player.length; i++) {
+        let temp = document.getElementById(player[i]).classList.remove("selected");
+    }
+    const temp = document.getElementById(player).classList.add("selected");
 }
 
-function showTopCard(card) {
+function showTopCard(Color, Value) {
     // diesen code teil auslagern? gleich wie in map
     const img = document.createElement("img");
 
-    img.src = `images/${card.Color}_${card.Value}.png`;
+    img.src = `images/${Color}_${Value}.png`;
     const ablegen = document.getElementById("ablegen").appendChild(img);
+    img.classList.add("overlay")
     ablegen.classList.add("playerDivs");
     ablegen.id = "ziehen-ablegen"
 }
@@ -159,10 +166,11 @@ function switchColor(color) {
 
 function mapCards(player) {
     const div = document.createElement("div");
-    div.id = player.Player;
+    //div.id = player.Player;
     div.classList.add("playerDivs");
 
     const playerInfo = document.createElement("div");
+    playerInfo.id = player.Player;
     playerInfo.classList.add("card");
     // playerInfo.classList.add("card-padded")
     const nameOfPlayer = document.createElement("h6");
@@ -179,7 +187,7 @@ function mapCards(player) {
     return player.Cards.map(function(el) {
         const img = document.createElement("img");
         let color = switchColor(el.Color);
-        
+
 
         // img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
         img.src = `images/${el.Color}_${el.Value}.png`;
@@ -194,7 +202,7 @@ function mapCards(player) {
             // console.log(index);
             e.target.classList.toggle("mouseOver");
         })
-    
+
         listElement.addEventListener("mouseout", function(e) {
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
@@ -206,16 +214,15 @@ function mapCards(player) {
             console.log(e.target.src);
             console.log(e.target.src.split("/"));
             let arr = e.target.src.split("/");
-            console.log(arr.length-1)
-            console.log(arr[arr.length-1].split(".")[0].split("_"));
+            console.log(arr.length - 1)
+            console.log(arr[arr.length - 1].split(".")[0].split("_"));
             console.log(e.target);
             console.log(e.currentTarget);
 
-            playCard(arr[arr.length-1].split(".")[0].split("_"));
+            playCard(arr[arr.length - 1].split(".")[0].split("_"));
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
         })
     })
 }
-

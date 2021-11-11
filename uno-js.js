@@ -1,6 +1,6 @@
 const baseUrl = "http://nowaunoweb.azurewebsites.net/Content/Cards/";
 let playId;
-
+let topCard = [];
 // beamer resolution: 1200 x 800
 
 //Show Modal Dialog from Bootstrap - Dialog öffne
@@ -142,7 +142,10 @@ function displayCurrentPlayer(currentPlayer) {
 
 function showTopCard(Color, Value) {
     // diesen code teil auslagern? gleich wie in map
-
+    //topCard = [Color] + "_" + [Value];
+    topCard.push(Color);
+    topCard.push("_");
+    topCard.push(Value);
     let img;
     console.log(document.getElementById("ablegen"));
     if (document.getElementById("ablegen").firstElementChild) {
@@ -221,14 +224,27 @@ function mapCards(player) {
             console.log(e.target.src.split("/"));
             let arr = e.target.src.split("/");
             console.log(arr.length - 1)
-            console.log(arr[arr.length - 1].split(".")[0].split("_"));
+            const card = arr[arr.length - 1].split(".")[0].split("_");
             console.log(e.target);
             console.log(e.currentTarget);
+            if (checkCard(card[0], card[1]) == true) {
+                playCard(arr[arr.length - 1].split(".")[0].split("_"));
+                e.currentTarget.parentNode.removeChild(e.currentTarget);
+                topCard = [];
+            }
 
-            playCard(arr[arr.length - 1].split(".")[0].split("_"));
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
         })
     })
+}
+
+function checkCard(color, value) {
+    console.log(topCard);
+    if (topCard[0] == color || topCard[2] == value) {
+        return true;
+    } else {
+        return false;
+    }
 }

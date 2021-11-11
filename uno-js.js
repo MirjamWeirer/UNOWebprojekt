@@ -297,8 +297,11 @@ async function ziehen() {
 
     if (response.ok) {
         let result = await response.json();
+        console.log("ziehen")
         console.log(result);
         displayCurrentPlayer(result.NextPlayer);
+        updateScore(document.getElementById(result.Player));
+        
         // append card to player
         console.log(document.getElementById(result.Player).nextSibling)
         const img = document.createElement("img");

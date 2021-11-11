@@ -86,24 +86,8 @@ async function load(){
 
 // Game/PlayCard/{id}?value={value}&color={color}&wildColor={wildColor}
 async function playCard(card) {
-    let url = "http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.charAt(1) + "&color=" + card.charAt(0) + "&wildColor=";
-    console.log(url);
-    let color = "";
-    switch (card.charAt(0)) {
-        case 'R':
-            color = "Red";
-            break;
-        case 'B':
-            color = "Blue";
-            break;
-        case 'Y':
-            color = "Yellow";
-            break;
-        case 'G':
-            color = "Green";
-            break;
-    }
-    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.charAt(1) + "&color=" + color + "&wildColor=", {
+    console.log("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card[1] + "&color=" + card[0] + "&wildColor=")
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card[1] + "&color=" + card[0] + "&wildColor=", {
         method: 'PUT'
     });
 
@@ -219,11 +203,15 @@ function mapCards(player) {
         })
 
         listElement.addEventListener("click", function(e) {
-            console.log(e.target.src.split("/")[5].split(".")[0]);
+            console.log(e.target.src);
+            console.log(e.target.src.split("/"));
+            let arr = e.target.src.split("/");
+            console.log(arr.length-1)
+            console.log(arr[arr.length-1].split(".")[0].split("_"));
             console.log(e.target);
             console.log(e.currentTarget);
 
-            playCard(e.target.src.split("/")[5].split(".")[0]);
+            playCard(arr[arr.length-1].split(".")[0].split("_"));
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);

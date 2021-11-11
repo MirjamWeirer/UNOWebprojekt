@@ -84,6 +84,37 @@ async function load(){
 // hier rufen wir unsere asynchrone funktion auf
 // load();
 
+// Game/PlayCard/{id}?value={value}&color={color}&wildColor={wildColor}
+async function playCard(card) {
+    let url = "http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.charAt(1) + "&color=" + card.charAt(0) + "&wildColor=";
+    console.log(url);
+    let color = "";
+    switch (card.charAt(0)) {
+        case 'R':
+            color = "Red";
+            break;
+        case 'B':
+            color = "Blue";
+            break;
+        case 'Y':
+            color = "Yellow";
+            break;
+        case 'G':
+            color = "Green";
+            break;
+    }
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.charAt(1) + "&color=" + color + "&wildColor=", {
+        method: 'PUT'
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+    } else {
+        alert("HTTP-Error: " + response.status)
+    }
+}
+
 function startGame() {
     load();
 }
@@ -101,7 +132,10 @@ function playGame(result) {
         mapCards(result.Players[i]);
     }
 
+    console.log(result.NextPlayer);
+
     displayCurrentPlayer(result.NextPlayer);
+
 
     
 
@@ -130,6 +164,7 @@ function showTopCard(card) {
     img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
     const ablegen = document.getElementById("ablegen").appendChild(img);
     ablegen.classList.add("playerDivs");
+    ablegen.id = "ziehen-ablegen"
 }
 
 function mapCards(player) {
@@ -151,14 +186,6 @@ function mapCards(player) {
     const ul = document.createElement("ul");
     const appending = document.querySelector("#playground").appendChild(div).appendChild(ul);
 
-    appending.addEventListener("click", function(e) {
-        console.log(e.target);
-        console.log(e.currentTarget);
-        // returns -1 (not working)
-        // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
-        // console.log(index);
-    })
-
     return player.Cards.map(function(el) {
         const img = document.createElement("img");
         let color;
@@ -175,8 +202,6 @@ function mapCards(player) {
         const list = appending.appendChild(listElement).appendChild(img);
 
         listElement.addEventListener("mouseover", function(e) {
-            console.log(e.target);
-            console.log(e.currentTarget);
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
@@ -184,12 +209,21 @@ function mapCards(player) {
         })
     
         listElement.addEventListener("mouseout", function(e) {
-            console.log(e.target);
-            console.log(e.currentTarget);
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
             e.target.classList.toggle("mouseOver");
+        })
+
+        listElement.addEventListener("click", function(e) {
+            console.log(e.target.src.split("/")[5].split(".")[0]);
+            console.log(e.target);
+            console.log(e.currentTarget);
+
+            playCard(e.target.src.split("/")[5].split(".")[0]);
+            // returns -1 (not working)
+            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+            // console.log(index);
         })
     })
 }

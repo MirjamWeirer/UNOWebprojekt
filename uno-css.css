@@ -33,6 +33,17 @@ ul {
   flex-direction: column;
 }
 
+.test {
+  background-color: aquamarine;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
 .mouseOver {
   transform: scale(1.2);
 }
+
+#ziehen-ablegen {
+  transform: scale(1.4);
+}
+

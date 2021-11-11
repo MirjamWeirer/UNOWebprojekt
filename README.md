@@ -9,7 +9,7 @@ Das ist unser super tolles Uno Projekt.
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:
-    + Spieler*innennamen eingeben (nur unterschiedliche)
+ - [x] Spieler*innennamen eingeben (nur unterschiedliche)
     + Grundstruktur wie Daten gespeichert
     + Spielstart vollständig (Karten am Tisch)
     + Button Listner für Karten

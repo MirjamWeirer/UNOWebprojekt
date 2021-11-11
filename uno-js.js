@@ -131,24 +131,30 @@ function playGame(result) {
     // }
 }
 
-function displayCurrentPlayer(player) {
+function displayCurrentPlayer(currentPlayer) {
     const div = document.getElementById("current");
-    div.textContent = "Current Player: " + player;
+    div.textContent = "Current Player: " + currentPlayer;
     for (let i = 0; i < player.length; i++) {
         let temp = document.getElementById(player[i]).classList.remove("selected");
     }
-    const temp = document.getElementById(player).classList.add("selected");
+    const temp = document.getElementById(currentPlayer).classList.add("selected");
 }
 
 function showTopCard(Color, Value) {
     // diesen code teil auslagern? gleich wie in map
-    const img = document.createElement("img");
 
+    let img;
+    console.log(document.getElementById("ablegen"));
+    if (document.getElementById("ablegen").firstElementChild) {
+        console.log(document.getElementById("ablegen").firstElementChild);
+        img = document.getElementById("ablegen").firstElementChild;
+    } else {
+        img = document.createElement("img");
+        const ablegen = document.getElementById("ablegen").appendChild(img);
+    }
     img.src = `images/${Color}_${Value}.png`;
-    const ablegen = document.getElementById("ablegen").appendChild(img);
-    img.classList.add("overlay")
+    //img.classList.add("overlay")
     ablegen.classList.add("playerDivs");
-    ablegen.id = "ziehen-ablegen"
 }
 
 function switchColor(color) {

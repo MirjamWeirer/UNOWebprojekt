@@ -219,8 +219,13 @@ function mapCards(player) {
             e.target.classList.toggle("mouseOver");
         })
 
-        listElement.addEventListener("click", function(e) {
-            console.log(e.target.src);
+        listElement.addEventListener("click", getCardToPlay)
+    })
+}
+
+
+function getCardToPlay(e) {
+    console.log(e.target.src);
             console.log(e.target.src.split("/"));
             let arr = e.target.src.split("/");
             console.log(arr.length - 1)
@@ -236,8 +241,6 @@ function mapCards(player) {
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
             // console.log(index);
-        })
-    })
 }
 
 function checkCard(color, value) {
@@ -248,3 +251,37 @@ function checkCard(color, value) {
         return false;
     }
 }
+
+document.getElementById("ziehen").addEventListener("click", function(e) {
+    ziehen();
+})
+
+// Game/DrawCard/{id}
+async function ziehen() {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/DrawCard/" + playId, {
+        method: 'PUT'
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+        displayCurrentPlayer(result.NextPlayer);
+        // append card to player
+        console.log(document.getElementById(result.Player).nextSibling)
+        const img = document.createElement("img");
+
+        console.log(result.Card);
+
+
+        // img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
+        img.src = `images/${result.Card.Color}_${result.Card.Value}.png`;
+        // console.log(`images/${color+value}.png`);
+        const listElement = document.createElement("li");
+        listElement.classList.add("playerCards");
+        document.getElementById(result.Player).nextSibling.appendChild(listElement).appendChild(img);
+    } else {
+        alert("HTTP-Error: " + response.status)
+    }
+}
+
+

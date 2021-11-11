@@ -157,7 +157,6 @@ function mapCards(player) {
         // returns -1 (not working)
         // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
         // console.log(index);
-        e.target.classList.toggle("selected");
     })
 
     return player.Cards.map(function(el) {
@@ -174,6 +173,24 @@ function mapCards(player) {
         const listElement = document.createElement("li");
         listElement.classList.add("playerCards");
         const list = appending.appendChild(listElement).appendChild(img);
+
+        listElement.addEventListener("mouseover", function(e) {
+            console.log(e.target);
+            console.log(e.currentTarget);
+            // returns -1 (not working)
+            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+            // console.log(index);
+            e.target.classList.toggle("mouseOver");
+        })
+    
+        listElement.addEventListener("mouseout", function(e) {
+            console.log(e.target);
+            console.log(e.currentTarget);
+            // returns -1 (not working)
+            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+            // console.log(index);
+            e.target.classList.toggle("mouseOver");
+        })
     })
 }
 

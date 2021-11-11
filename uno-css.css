@@ -4,3 +4,23 @@ ul {
     padding: 0;
     display: inline-flex
   }
+
+.playerCards {
+  margin: 3px;
+}
+
+.playerDivs {
+  margin: 25px;
+}
+
+.card {
+  padding: 15px;
+  width: 75%;
+}
+
+#left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}

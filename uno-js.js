@@ -1,6 +1,8 @@
 const baseUrl = "http://nowaunoweb.azurewebsites.net/Content/Cards/";
 let playId;
 
+// beamer resolution: 1200 x 800
+
 //Show Modal Dialog from Bootstrap - Dialog öffne
 let modal = new bootstrap.Modal(document.getElementById("playerName"));
 modal.show();
@@ -99,12 +101,19 @@ function playGame(result) {
         mapCards(result.Players[i]);
     }
 
+    displayCurrentPlayer(result.NextPlayer);
+
     
 
     // think of sth like this:
     // for (let i = 0; i < player.length; i++) {
     //     mapCards(result.Players[i].Cards, i)
     // }
+}
+
+function displayCurrentPlayer(player) {
+    const div = document.getElementById("current");
+    div.textContent = "Current Player: " + player;
 }
 
 function showTopCard(card) {
@@ -120,13 +129,34 @@ function showTopCard(card) {
 
     img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
     const ablegen = document.getElementById("ablegen").appendChild(img);
+    ablegen.classList.add("playerDivs");
 }
 
 function mapCards(player) {
     const div = document.createElement("div");
     div.id = player.Player;
+    div.classList.add("playerDivs");
+
+    const playerInfo = document.createElement("div");
+    playerInfo.classList.add("card");
+    // playerInfo.classList.add("card-padded")
+    const nameOfPlayer = document.createElement("h6");
+    nameOfPlayer.textContent = player.Player;
+    div.appendChild(playerInfo);
+    playerInfo.appendChild(nameOfPlayer);
+
     const ul = document.createElement("ul");
     const appending = document.querySelector("#playground").appendChild(div).appendChild(ul);
+
+    appending.addEventListener("click", function(e) {
+        console.log(e.target);
+        console.log(e.currentTarget);
+        // returns -1 (not working)
+        // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+        // console.log(index);
+        e.target.classList.toggle("selected");
+    })
+
     return player.Cards.map(function(el) {
         const img = document.createElement("img");
         let color;
@@ -139,6 +169,7 @@ function mapCards(player) {
 
         img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
         const listElement = document.createElement("li");
+        listElement.classList.add("playerCards");
         const list = appending.appendChild(listElement).appendChild(img);
     })
 }

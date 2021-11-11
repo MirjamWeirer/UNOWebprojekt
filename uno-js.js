@@ -142,8 +142,11 @@ function mapCards(player) {
     // playerInfo.classList.add("card-padded")
     const nameOfPlayer = document.createElement("h6");
     nameOfPlayer.textContent = player.Player;
+    const points = document.createElement("h7");
+    points.textContent = "Points: " + player.Score;
     div.appendChild(playerInfo);
     playerInfo.appendChild(nameOfPlayer);
+    playerInfo.appendChild(points);
 
     const ul = document.createElement("ul");
     const appending = document.querySelector("#playground").appendChild(div).appendChild(ul);

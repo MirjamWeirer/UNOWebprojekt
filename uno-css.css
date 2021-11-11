@@ -14,8 +14,16 @@ ul {
 }
 
 .card {
-  padding: 15px;
+  padding-left: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-right: 70px;
   width: 75%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: linear-gradient(.25turn, #75a4f0, #dae4f5 50%);
+  border: none;
 }
 
 #left {

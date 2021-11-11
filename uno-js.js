@@ -205,6 +205,8 @@ function mapCards(player) {
         listElement.classList.add("playerCards");
         const list = appending.appendChild(listElement).appendChild(img);
 
+        // add event listener auf ul
+
         listElement.addEventListener("mouseover", function(e) {
             // returns -1 (not working)
             // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
@@ -278,6 +280,7 @@ async function ziehen() {
         // console.log(`images/${color+value}.png`);
         const listElement = document.createElement("li");
         listElement.classList.add("playerCards");
+        listElement.addEventListener("click", getCardToPlay);
         document.getElementById(result.Player).nextSibling.appendChild(listElement).appendChild(img);
     } else {
         alert("HTTP-Error: " + response.status)

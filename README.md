@@ -13,6 +13,7 @@ Das ist unser super tolles Uno Projekt.
  - [x] Grundstruktur wie Daten gespeichert
  - [x] Spielstart vollständig (Karten am Tisch)
  - [x] Button Listner für Karten
+ - [ ] addEventListener auf UL, nicht LI
  - 18.11. Ziel:
  - [ ] Karten spielen
  - [ ] Karten hinzufügen/entfernen

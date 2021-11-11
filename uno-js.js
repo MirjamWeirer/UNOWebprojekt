@@ -153,18 +153,24 @@ function displayCurrentPlayer(player) {
 function showTopCard(card) {
     // diesen code teil auslagern? gleich wie in map
     const img = document.createElement("img");
-    let color;
-    if (card.Color == "Black") {
-        color = "";
-    } else {
-        color = `${card.Color}`;
-    }
-    let value = convertNumber(card.Value);
 
-    img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
+    img.src = `images/${card.Color}_${card.Value}.png`;
     const ablegen = document.getElementById("ablegen").appendChild(img);
     ablegen.classList.add("playerDivs");
     ablegen.id = "ziehen-ablegen"
+}
+
+function switchColor(color) {
+    switch (color) {
+        case 'R':
+            return "Red";
+        case 'B':
+            return "Blue";
+        case 'Y':
+            return "Yellow";
+        case 'G':
+            return "Green";
+    }
 }
 
 function mapCards(player) {
@@ -188,15 +194,12 @@ function mapCards(player) {
 
     return player.Cards.map(function(el) {
         const img = document.createElement("img");
-        let color;
-        if (el.Color == "Black") {
-            color = "";
-        } else {
-            color = `${el.Color}`;
-        }
-        let value = convertNumber(el.Value);
+        let color = switchColor(el.Color);
+        
 
-        img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
+        // img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
+        img.src = `images/${el.Color}_${el.Value}.png`;
+        // console.log(`images/${color+value}.png`);
         const listElement = document.createElement("li");
         listElement.classList.add("playerCards");
         const list = appending.appendChild(listElement).appendChild(img);
@@ -228,16 +231,3 @@ function mapCards(player) {
     })
 }
 
-function convertNumber(cardValue) {
-    if (cardValue < 10) {
-        return cardValue;
-    }
-
-    switch(cardValue) {
-        case 10: return "d2";
-        case 11: return "s";
-        case 12: return "r";
-        case 13: return "wd4";
-        case 14: return "wild";
-    }
-}

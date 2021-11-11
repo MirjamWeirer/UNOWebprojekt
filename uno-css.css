@@ -13,6 +13,10 @@ ul {
   margin: 25px;
 }
 
+img {
+  transform: scale(0.4);
+}
+
 .card {
   padding-left: 15px;
   padding-top: 3px;

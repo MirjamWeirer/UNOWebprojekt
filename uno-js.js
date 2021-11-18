@@ -17,7 +17,7 @@ let player1Score;
 let player2Score;
 let player3Score;
 let player4Score;
-
+//let testPlayer = new Object;
 let player1field = document.getElementById("player1cards");
 
 document.getElementById("playerNamesForm").addEventListener("keyup", checkName);
@@ -83,6 +83,9 @@ async function load() {
         playId = result.Id;
         playGame(result);
         console.log(result);
+        testPlayer = result.Players;
+        console.log(testPlayer);
+
 
         // alert(JSON.stringify(result));
     } else {
@@ -346,8 +349,14 @@ async function ziehen() {
         console.log("ziehen")
         console.log(result);
         console.log(result.Player);
-        console.log(result.Card.Score);
+        //console.log(testPlayer.Score);
+        //console.log(result.Card.Score);
         cardScore = result.Card.Score;
+
+        if (result.Players == testPlayer.Players) {
+            //testPlayer.Players.Score += result.Card.Score;
+            console.log(testPlayer.Players.Score);
+        }
 
         console.log(cardScore);
         displayCurrentPlayer(result.NextPlayer);
@@ -360,8 +369,7 @@ async function ziehen() {
         const img = document.createElement("img");
 
         console.log(result.Card);
-        playerScore += result.Card.Score;
-        console.log(playerScore);
+
 
 
         // img.src = `${baseUrl}${color.slice(0,1)+value}.png`;

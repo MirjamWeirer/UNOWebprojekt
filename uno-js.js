@@ -1,6 +1,7 @@
 const baseUrl = "http://nowaunoweb.azurewebsites.net/Content/Cards/";
 let playId;
 let topCard = [];
+let cardScore;
 // beamer resolution: 1200 x 800
 
 //Show Modal Dialog from Bootstrap - Dialog öffne
@@ -11,6 +12,11 @@ modal.show();
 let player = [];
 let playerDivs = [];
 let playerDivCombo = [];
+let playerValue = [];
+let player1Score;
+let player2Score;
+let player3Score;
+let player4Score;
 
 let player1field = document.getElementById("player1cards");
 
@@ -50,6 +56,7 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
 
         console.log(player.length)
         console.log(player);
+
         modal.hide();
         document.getElementById("desk").style.visibility = 'visible';
         startGame();
@@ -75,7 +82,8 @@ async function load() {
         let result = await response.json(); // alternativ response.text wenn nicht json gewünscht ist
         playId = result.Id;
         playGame(result);
-        // console.log(result);
+        console.log(result);
+
         // alert(JSON.stringify(result));
     } else {
         alert("HTTP-Error: " + response.status);
@@ -113,6 +121,13 @@ function playGame(result) {
     console.log(result.Players[0].Cards[0]);
     console.log(result.Players[0].Cards[0].Color);
     console.log(result.Players[0].Cards[0].Color[0]);
+    //console.log(result.Players[0].Score);
+    player1Score = result.Players[0].Score;
+    player2Score = result.Players[1].Score;
+    player3Score = result.Players[2].Score;
+    player4Score = result.Players[3].Score;
+
+    console.log(player1Score);
 
     showTopCard(result.TopCard.Color, result.TopCard.Value);
 
@@ -176,18 +191,21 @@ function switchColor(color) {
 }
 
 function mapCards(player) {
+    //console.log(player);
     const div = document.createElement("div");
     //div.id = player.Player;
     div.classList.add("playerDivs");
 
     const playerInfo = document.createElement("div");
     playerInfo.id = player.Player;
+
     playerInfo.classList.add("card");
     // playerInfo.classList.add("card-padded")
     const nameOfPlayer = document.createElement("h6");
     nameOfPlayer.textContent = player.Player;
     const points = document.createElement("h7");
     points.textContent = "Points: " + player.Score;
+    //console.log(playerScore);
     div.appendChild(playerInfo);
     playerInfo.appendChild(nameOfPlayer);
     playerInfo.appendChild(points);
@@ -202,7 +220,7 @@ function mapCards(player) {
         if (e.target != e.currentTarget) {
             e.target.classList.toggle("mouseOver");
         }
-        
+
     })
 
     ul.addEventListener("mouseout", function(e) {
@@ -230,7 +248,7 @@ function mapCards(player) {
 
         // add event listener auf ul
 
-        
+
     })
 }
 
@@ -239,25 +257,41 @@ function getCardToPlay(e) {
     console.log(e.target.src);
     console.log(e.target);
     console.log(e.currentTarget);
-            console.log(e.target.src.split("/"));
-            let arr = e.target.src.split("/");
-            console.log(arr.length - 1)
-            const card = arr[arr.length - 1].split(".")[0].split("_");
-            console.log(e.target);
-            console.log(e.currentTarget);
-            if (checkCard(card[0], card[1]) == true) {
-                playCard(arr[arr.length - 1].split(".")[0].split("_"), e.currentTarget.parentNode.firstElementChild);
-                // GetCards/{id}?playerName={playerName}
-                e.currentTarget.removeChild(e.target.parentNode);
-                console.log( e.currentTarget.parentNode.firstElementChild);
-                // updateScore(e.currentTarget.parentNode.firstElementChild);
-                topCard = [];
-            }
+    console.log(e.target.src.split("/"));
+    let arr = e.target.src.split("/");
+    console.log(arr.length - 1)
+    const card = arr[arr.length - 1].split(".")[0].split("_");
+    console.log(e.target);
+    console.log(e.currentTarget);
+    if (checkCard(card[0], card[1]) == true) {
+        playCard(arr[arr.length - 1].split(".")[0].split("_"), e.currentTarget.parentNode.firstElementChild);
+        // GetCards/{id}?playerName={playerName}
+        e.currentTarget.removeChild(e.target.parentNode);
+        console.log(e.currentTarget.parentNode.firstElementChild);
+        // updateScore(e.currentTarget.parentNode.firstElementChild);
+        topCard = [];
+        if (card[0] == "Black") {
+            playCard(arr[arr.length - 1].split(".")[0].split("_"))
+        }
+    }
 
-            // returns -1 (not working)
-            // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
-            // console.log(index);
+
+    // returns -1 (not working)
+    // const index = Array.from(document.getElementsByTagName("li")).findIndex(el => el.innerHTML == e.target);
+    // console.log(index);
 }
+/*if (ziehen()) {
+    player.Score += Card.Score;
+    console.log(player.Score);
+} else {
+    player.Score -= Card.Score;
+    console.log(player.Score);
+}
+function updateScore() {
+    console.log(playerScore);
+    console.log(cardScore);
+}
+*/
 
 async function updateScore(player) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + player.id, {
@@ -274,11 +308,23 @@ async function updateScore(player) {
         console.log(result.Score);
         player.lastElementChild.textContent = "Points: " + result.Score;
     }
+
+
 }
+
+
+
 
 function checkCard(color, value) {
     console.log(topCard);
+    console.log(color);
+    console.log(value);
     if (topCard[0] == color || topCard[2] == value) {
+        return true;
+    } else if (color == "Black") {
+        alert("Welche Farbe möchtest du spielen?");
+        document.querySelector("farbauswahl").visibility = true;
+        document.querySelector("farbauswahl").createElement("input");
         return true;
     } else {
         return false;
@@ -299,14 +345,23 @@ async function ziehen() {
         let result = await response.json();
         console.log("ziehen")
         console.log(result);
+        console.log(result.Player);
+        console.log(result.Card.Score);
+        cardScore = result.Card.Score;
+
+        console.log(cardScore);
         displayCurrentPlayer(result.NextPlayer);
-        updateScore(document.getElementById(result.Player));
-        
+        //console.log(player.Score);
+        //updateScore(document.getElementById(result.Player));
+        //updateScore();
+
         // append card to player
-        console.log(document.getElementById(result.Player).nextSibling)
+        console.log(document.getElementById(result.Player).nextSibling);
         const img = document.createElement("img");
 
         console.log(result.Card);
+        playerScore += result.Card.Score;
+        console.log(playerScore);
 
 
         // img.src = `${baseUrl}${color.slice(0,1)+value}.png`;
@@ -319,6 +374,9 @@ async function ziehen() {
     } else {
         alert("HTTP-Error: " + response.status)
     }
+    //return result.Player;
 }
 
-
+function findCurrentPlayer(result) {
+    console.log(result);
+}

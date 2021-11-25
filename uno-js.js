@@ -4,6 +4,23 @@ let topCard = [];
 let cardScore;
 // beamer resolution: 1200 x 800
 
+// Card constructor function
+function Card(color, text, value, score) {
+    this.Color = color;
+    this.Text = text;
+    this.Value = value;
+    this.Score = score;
+}
+
+// Player constructor function with cards and score with default values to be able to create players only with names
+function Player(name, cards = [], score = -1) {
+    this.Name = name;
+    this.Cards = cards;
+    this.Score = score;
+}
+
+let playerObjects = [];
+
 //Show Modal Dialog from Bootstrap - Dialog öffne
 let modal = new bootstrap.Modal(document.getElementById("playerName"));
 modal.show();
@@ -42,6 +59,11 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
         player.push(document.getElementById("player2").value);
         player.push(document.getElementById("player3").value);
         player.push(document.getElementById("player4").value);
+
+        playerObjects.push(new Player(document.getElementById("player1").value));
+        playerObjects.push(new Player(document.getElementById("player2").value));
+        playerObjects.push(new Player(document.getElementById("player3").value));
+        playerObjects.push(new Player(document.getElementById("player4").value));
 
         // für das austeilen der karten
         playerDivs.push(document.getElementById("player1cards"));
@@ -129,6 +151,11 @@ function playGame(result) {
     player2Score = result.Players[1].Score;
     player3Score = result.Players[2].Score;
     player4Score = result.Players[3].Score;
+
+    playerObjects[0].Score = result.Players[0].Score;
+    playerObjects[1].Score = result.Players[1].Score;
+    playerObjects[2].Score = result.Players[2].Score;
+    playerObjects[3].Score = result.Players[3].Score;
 
     console.log(player1Score);
 

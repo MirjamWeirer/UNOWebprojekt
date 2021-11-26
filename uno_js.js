@@ -26,6 +26,7 @@ let playerTurn;
 let topCard;
 let playId;
 let colorWish;
+let reverse = 1;
 
 let pile = document.getElementById("ablegen");
 
@@ -55,11 +56,11 @@ document.getElementById("playerNamesForm").addEventListener("submit", function(e
         playerNames.push(player3.value);
         playerNames.push(player4.value);
 
-        // für das austeilen der karten
-        playerDivs.push(document.getElementById("player1cards"));
-        playerDivs.push(document.getElementById("player2cards"));
-        playerDivs.push(document.getElementById("player3cards"));
-        playerDivs.push(document.getElementById("player4cards"));
+        // für das austeilen der karten - werden die playerXcards irgendwo erstellt? nicht gefunden
+        // playerDivs.push(document.getElementById("player1cards"));
+        // playerDivs.push(document.getElementById("player2cards"));
+        // playerDivs.push(document.getElementById("player3cards"));
+        // playerDivs.push(document.getElementById("player4cards"));
 
         modal.hide();
         document.getElementById("desk").style.visibility = 'visible';
@@ -124,7 +125,7 @@ function showTopCard(card) {
     }
     img.src = `images/${card.Color}_${card.Value}.png`;
     // what for?
-    // pile.classList.add("playerDivs");
+    pile.classList.add("playerDivs");
     // OR
     // img.classList.add("playerDivs");
 }
@@ -132,10 +133,12 @@ function showTopCard(card) {
 function mapCards(player) {
     const div = document.createElement("div");
     div.classList.add("playerDivs");
+    // playerDivs.push(div);
 
     const playerInfo = document.createElement("div");
     playerInfo.id = player.Name;
     playerInfo.classList.add("card");
+    playerDivs.push(playerInfo);
 
     const nameOfPlayer = document.createElement("h6");
     nameOfPlayer.textContent = player.Name;
@@ -228,12 +231,52 @@ async function playCard(card, player, color) {
         playerTurn = result.Player;
         displayCurrentPlayer(playerTurn);
 
+        console.log("play card");
+        console.log(result.Cards);
+        console.log(playerObjects.find(function(e) {
+            return e.Name == result.Player;
+        }).Cards);
+
         topCard = card;
         showTopCard(topCard);
 
-        updateScore(player, card.Score);
+        updateScoreAfterPlay(player, card.Score);
+
+        if (card.Value == 12) {
+            reverse *= -1;
+        }
+
+        if(card.Score == 50 || card.Value == 10) {
+            let index = playerObjects.indexOf(playerObjects.find(function(e) {
+                return e.Name == player.id;
+            })) + reverse;
+
+            if (index < 0) {
+                index = playerObjects.length - 1;
+            }
+            if (index > playerObjects.length - 1) {
+                index = 0;
+            }
+
+            let tempPlayer = playerObjects[index];
+            updateCards(tempPlayer);
+        }
     } else {
         alert("HTTP-Error: " + response.status)
+    }
+}
+
+async function updateCards(player) {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + player.Name, {
+        method: 'GET'
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        player.Cards = result.Cards;
+        player.Score = result.Score;
+        updateScoreAfterDraw(player);
+        updateCardsAfterDraw(player);
     }
 }
 
@@ -246,7 +289,28 @@ function displayCurrentPlayer(currentPlayer) {
     document.getElementById(currentPlayer).classList.add("selected");
 }
 
-function updateScore(player, score) {
+function updateCardsAfterDraw(player) {
+    let list = playerDivs.find(function(e) {
+        return e.id == player.Name;
+    }).parentNode.lastElementChild;
+    let length = list.children.length;
+    console.log(list);
+    for (let i = length; i < player.Cards.length; i++) {
+        let img = document.createElement("img");
+        img.src = `images/${player.Cards[i].Color}_${player.Cards[i].Value}.png`;
+        let listElement = document.createElement("li");
+        listElement.classList.add("playerCards");
+        list.appendChild(listElement).appendChild(img);
+    }
+}
+
+function updateScoreAfterDraw(player) {
+    playerDivs.find(function(e) {
+        return e.id == player.Name;
+    }).lastElementChild.textContent = "Points: " + player.Score;
+}
+
+function updateScoreAfterPlay(player, score) {
     let tempPlayer = playerObjects.find(function(e) {
         return e.Name == player.id;
     });

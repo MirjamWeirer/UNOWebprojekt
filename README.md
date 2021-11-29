@@ -7,6 +7,10 @@ Das ist unser super tolles Uno Projekt.
 - [ ] eventlistener
 - [ ] currentplayer field (indexOf?)
 
+## Anmerkungen und Ideen
+- backface-visibility?
+- für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa)
+
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:
  - [x] Spieler*innennamen eingeben (nur unterschiedliche)
@@ -21,3 +25,4 @@ Das ist unser super tolles Uno Projekt.
  - [ ] Sonderfälle abgedeck: Farbwechsel
  - 26.11. Ziel:
  - [ ] Animation vorhanden   
+

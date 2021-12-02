@@ -376,7 +376,7 @@ async function ziehen() {
         console.log("ziehen")
         console.log(result);
         console.log(result.Player);
-        //console.log(testPlayer.Score);
+        console.log(testPlayer.Score);
         //console.log(result.Card.Score);
         cardScore = result.Card.Score;
 

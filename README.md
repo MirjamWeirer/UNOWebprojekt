@@ -8,8 +8,9 @@ Das ist unser super tolles Uno Projekt.
 - [ ] currentplayer field (indexOf?)
 
 ## Anmerkungen und Ideen
-- backface-visibility?
-- für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa)
+- backface-visibility? leider nicht
+- für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa) -coole idee
+- karte nach farbwunsch liegt nicht am richtigen platz
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:

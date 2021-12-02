@@ -35,15 +35,16 @@ let modal = new bootstrap.Modal(document.getElementById("playerName"));
 modal.show();
 
 document.getElementById("playerNamesForm").addEventListener("keyup", checkName);
+
 function checkName() {
     if (player1.value == player2.value) {
         player2.value = "";
     } else if (player1.value == player3.value ||
         player2.value == player3.value) {
-            player3.value = "";
+        player3.value = "";
     } else if (player1.value == player4.value ||
-    player2.value == player4.value ||
-    player3.value == player4.value) {
+        player2.value == player4.value ||
+        player3.value == player4.value) {
         player4.value = "";
     }
 }
@@ -210,14 +211,73 @@ function checkCard(card) {
         return true;
     } else if (card.Color == "Black") {
         colorWish = prompt("Welche Farbe möchtest du spielen?");
+        console.log(colorWish);
+        /*let color = switchColor(colorWish);
+        let img; // = document.createElement("img");
+        if (color == "Red" && card.Value == 13) {
+            img.src = `images/Red13.png`;
+
+        } else if (color == "Red") {
+            img.src = `images/wild_r.png`;
+            console.log(img);
+        }
+        if (color == "Blue" && card.Value == 13) {
+            img.src = `images/Blue13.png`;
+        } else if (color == "Blue") {
+            img.src = `images/wild_b.png`;
+            console.log(img);
+        }
+        if (color == "Yellow" && card.Value == 13) {
+            img.src = `images/Yellow13.png`;
+        } else if (color == "Yellow") {
+            img.src = `images/wild_y.png`;
+            console.log(img);
+        }
+        if (color == "Green" && card.Value == 13) {
+            img.src = `images/Green13.png`;
+        } else if (color == "Green") {
+            img.src = `images/wild_g.png`;
+            console.log(img);
+        }
+        if (pile.firstElementChild) {
+            img = pile.firstElementChild;
+        } else {
+            img = document.createElement("img");
+            pile.appendChild(img);
+        }
+        if (pile.firstElementChild) {
+            img = pile.appendChild(img);
+        }*/
         // prevent default - no sending without color!
-        document.querySelector("farbauswahl").visibility = true;
-        document.querySelector("farbauswahl").createElement("input");
+        //document.querySelector("farbauswahl").visibility = true;
+        //document.querySelector("farbauswahl").createElement("input");
         return true;
     } else {
         return false;
     }
 }
+
+function switchColor(color) {
+    switch (color) {
+        case 'R':
+            return "Red";
+        case 'B':
+            return "Blue";
+        case 'Y':
+            return "Yellow";
+        case 'G':
+            return "Green";
+        case 'Rot':
+            return "Red";
+        case 'Blau':
+            return "Blue";
+        case 'Gelb':
+            return "Yellow";
+        case "Grün":
+            return "Green";
+    }
+}
+
 
 async function playCard(card, player, color) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + color, {
@@ -235,7 +295,7 @@ async function playCard(card, player, color) {
         console.log(playerObjects.find(function(e) {
             return e.Name == result.Player;
         }).Cards);
-
+        console.log(color)
         topCard = card;
         showTopCard(topCard);
 
@@ -245,7 +305,7 @@ async function playCard(card, player, color) {
             reverse *= -1;
         }
 
-        if(card.Score == 50 || card.Value == 10) {
+        if (card.Score == 50 || card.Value == 10) {
             let index = playerObjects.indexOf(playerObjects.find(function(e) {
                 return e.Name == player.id;
             })) + reverse;
@@ -259,7 +319,7 @@ async function playCard(card, player, color) {
 
             let tempPlayer = playerObjects[index];
             updateCards(tempPlayer);
-        } 
+        }
     } else {
         alert("HTTP-Error: " + response.status)
     }
@@ -396,4 +456,3 @@ async function ziehen() {
 function findCurrentPlayer(result) {
     console.log(result);
 }
-

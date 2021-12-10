@@ -17,6 +17,41 @@ body {
     border: none;
 }
 
+#colorPicker .modal-title {
+    color: #ece0f5;
+}
+
+#colorPicker .btn {
+    margin: 10px;
+    height: 100px;
+    width: 200px;
+}
+
+.btn-yellow {
+    background-color: yellow;
+}
+
+.btn-green {
+    background-color: green;
+}
+
+.btn-blue {
+    background-color: blue;
+}
+
+.btn-red {
+    background-color: red;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+#colorPicker .modal-title {
+    color: #ece0f5;
+}
+
 ul {
     list-style: none;
     margin: 0;

@@ -3,6 +3,20 @@ body {
     background-size: cover;
 }
 
+.modal-content {
+    background-color: #8f71a3;
+    opacity: 75%;
+}
+
+.modal-title {
+    color: #382744
+}
+
+#play {
+    background-color: #533a64;
+    border: none;
+}
+
 ul {
     list-style: none;
     margin: 0;

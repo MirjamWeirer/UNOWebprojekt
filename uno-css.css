@@ -1,3 +1,8 @@
+body {
+    background: url('images/poster-space-galaxy-image.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
 ul {
     list-style: none;
     margin: 0;

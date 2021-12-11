@@ -411,9 +411,7 @@ function updateScoreAfterPlay(player, score) {
     player.lastElementChild.textContent = "Points: " + tempPlayer.Score;
 }
 
-document.getElementById("ziehen").addEventListener("click", function(e) {
-    ziehen();
-})
+document.getElementById("ziehen").addEventListener("click", ziehen);
 
 // Game/DrawCard/{id}
 async function ziehen() {
@@ -428,16 +426,18 @@ async function ziehen() {
         console.log(result.Player);
         //console.log(testPlayer.Score);
         //console.log(result.Card.Score);
-        cardScore = result.Card.Score;
+        // cardScore = result.Card.Score;
+        let tempPlayer = players.find(function(e) {
+            return e.Name == result.Player;
+        });
+        updatePlayerAfterDraw(tempPlayer, result.Card);
+        updateCardsAfterDraw(tempPlayer);
+        updateScoreAfterDraw(tempPlayer);        
 
-        if (result.Players == testPlayer.Players) {
-            //testPlayer.Players.Score += result.Card.Score;
-            console.log(testPlayer.Players.Score);
-        }
+        playerTurn = result.NextPlayer;
+        displayCurrentPlayer(playerTurn);
 
-        displayCurrentPlayer(result.NextPlayer);
-
-        // append card to player
+        /*
         console.log(document.getElementById(result.Player).nextSibling);
         const img = document.createElement("img");
 
@@ -449,8 +449,14 @@ async function ziehen() {
         const listElement = document.createElement("li");
         listElement.classList.add("playerCards");
         document.getElementById(result.Player).nextSibling.appendChild(listElement).appendChild(img);
+        */
     } else {
         alert("HTTP-Error: " + response.status)
     }
     //return result.Player;
+}
+
+function updatePlayerAfterDraw(player, card) {
+    player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
+    player.Score += card.Score;
 }

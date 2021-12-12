@@ -21,6 +21,8 @@ let player4 = document.getElementById("player4");
 let playerNames = [];
 let playerDivs = [];
 
+let diffCards = [];
+
 let pile = document.getElementById("ablegen");
 
 let reverse = 1;

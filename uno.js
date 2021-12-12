@@ -20,7 +20,6 @@ function checkName() {
 
 function submitNames(e) {
     e.preventDefault();
-    console.log(e.target);
     e.target.classList.remove("shakeIt")
 
     if (player1.value != "" && player2.value != "" && player3.value != "" && player4.value != "") {
@@ -32,7 +31,6 @@ function submitNames(e) {
         modal.hide();
         startGame();
     } else {
-        console.log(e);
         e.target.classList.add("shakeIt");
         setTimeout(function() {
             e.target.classList.remove("shakeIt");
@@ -43,6 +41,7 @@ function submitNames(e) {
 async function startGame() {
     console.log("startGame");
     let response = await load();
+    console.log(response);
     playGame(response);
 }
 
@@ -90,9 +89,7 @@ function greet() {
 
 function playGame(result) {
     console.log("playGame");
-    playId = result.Id;
-
-    playerTurn = result.NextPlayer;
+    playId = result.Id;    
     
 
     for (let i = 0; i < result.Players.length; i++) {
@@ -101,6 +98,11 @@ function playGame(result) {
         mapCards(players[i]);
     }
 
+    playerTurn = players.find(function(e) {
+        return e.Name == result.NextPlayer;
+    })
+    console.log(result.NextPlayer);
+
     topCard = new Card(result.TopCard.Color, result.TopCard.Text, result.TopCard.Value, result.TopCard.Score);
     showTopCard(topCard);
     displayCurrentPlayer(playerTurn);
@@ -108,19 +110,13 @@ function playGame(result) {
 
 function displayCurrentPlayer(currentPlayer) {
     console.log("displayCurrentPlayer");
+    console.log(currentPlayer);
     const div = document.getElementById("current").firstElementChild;
-    console.log(document.getElementById("current").lastElementChild);
-    console.log(document.getElementById("current").firstElementChild);
-    console.log("test");
-    console.log(div);
-    console.log(document.getElementById("current"));
-    div.textContent = currentPlayer.toUpperCase();
+    div.textContent = currentPlayer.Name.toUpperCase();
 
     for (let i = 0; i < playerNames.length; i++) {
         let inspectedDiv = document.getElementById(playerNames[i]);
-        if (playerNames[i] == currentPlayer) {
-            console.log(inspectedDiv.parentNode);
-            console.log(inspectedDiv.parentNode.lastChild);
+        if (playerNames[i] == currentPlayer.Name) {
             inspectedDiv.style.opacity = 1;
             inspectedDiv.parentNode.lastChild.classList.remove("notSelected");
         } else {
@@ -202,24 +198,11 @@ async function getCardToPlay(e) {
     const cardScore = mapCardScore(card[0], card[1]);
     const cardToPlay = new Card(card[0], "", card[1], cardScore);
 
-    console.log("------------------");
-    let arr2 = e.target.parentNode.parentNode;
-    let arr3 = e.target.parentNode;
-    console.log(arr2);
-    console.log(arr2.children);
-    console.log(Array.from(arr2.children));
-    console.log(arr3);
-    console.log(Array.from(arr3));
-    console.log("------------------------");
-    console.log("++++++++++++++++");
     let clicked = e.target.closest('li');
-    console.log(clicked);
-    let parentUl = Array.from(arr2.children);
+    let parentUl = Array.from(e.target.parentNode.parentNode.children);
     let indexOfClicked = parentUl.indexOf(clicked);
-    console.log(indexOfClicked);
-    console.log("++++++++++++++++");
 
-    if (e.currentTarget.parentNode.firstElementChild.id != playerTurn) {
+    if (e.currentTarget.parentNode.firstElementChild.id != playerTurn.Name) {
         e.preventDefault;
         // animation?
         console.log("not your turn");
@@ -230,9 +213,12 @@ async function getCardToPlay(e) {
         }, 1000);
     } else {
         if (checkCard(cardToPlay) == true) {
-            playCard(cardToPlay, e.currentTarget.parentNode.firstElementChild, colorWish);
+            /*playCard(cardToPlay, e.currentTarget.parentNode.firstElementChild, colorWish);*/
+            console.log(playerTurn);
             e.currentTarget.removeChild(e.target.parentNode);
             removeCardFromArr(indexOfClicked);
+            playCard(cardToPlay, playerTurn, colorWish);
+            
         } else {
             e.target.parentNode.classList.add("shakeIt");
             setTimeout(function() {
@@ -258,23 +244,23 @@ function mapCardScore(color, value) {
 function checkCard(card) {
     console.log("checkCard");
     let currPlayer = players.find(function(e) {
-        return e.Name == playerTurn;
+        return e.Name == playerTurn.Name;
     })
     if (card.Color == "Black") {
         
         let foundCard = currPlayer.Cards.find(function(e) {
             return e.Color == topCard.Color;
         })
-        console.log(foundCard);
         if (card.Value == 13 && typeof(foundCard) !== 'undefined') {
             console.log("+4 not allowed");
             return false;
         }
-        colorWish = prompt("Welche Farbe?")
-        // getColor();
-        
-        console.log("test3");
-        console.log(colorWish);
+        if (topCard.Value >= 14 && card.Value == 13) {
+            alert("Color has to stay the same");
+            colorWish = topCard.Color;
+        } else {
+            colorWish = prompt("Welche Farbe?")
+        }
         return true; 
     } else if (topCard.Color == card.Color || topCard.Value == card.Value) {
         colorWish = "";
@@ -286,14 +272,9 @@ function checkCard(card) {
 
 function removeCardFromArr(index) {
     console.log("removeCardFromArr");
-    console.log(index);
-    console.log(players.find(function(e) {
-        return e.Name == playerTurn;
-    }).Cards);
-    let test = players.find(function(e) {
-        return e.Name == playerTurn;
+    players.find(function(e) {
+        return e.Name == playerTurn.Name;
     }).Cards.splice(index, 1);
-    console.log(test);
 }
 
 function processColorWish(colorWish, cardValue) {
@@ -359,17 +340,19 @@ async function playCard(card, player, color) {
 
     if (response.ok) {
         let result = await response.json();
+
         console.log(result);
 
-        playerTurn = result.Player;
-        displayCurrentPlayer(playerTurn);
+        if (result.Cards.length == 0) {
+            console.log("end of game");
+            makeItFire();
+        }
 
-        console.log("play card");
-        console.log(result.Cards);
-        console.log(players.find(function(e) {
+        playerTurn = players.find(function(e) {
             return e.Name == result.Player;
-        }).Cards);
-        console.log(color)
+        });
+        console.log(playerTurn);
+        displayCurrentPlayer(playerTurn);
 
         if (card.Value > 12) {
             topCard = processColorWish(color, card.Value);
@@ -379,20 +362,18 @@ async function playCard(card, player, color) {
         
         showTopCard(topCard);
 
+        console.log("---" + player);
+
         updateScoreAfterPlay(player, card.Score);
 
         if (card.Value == 12) {
             reverse *= -1;
         }
 
-        console.log(player);
-
         if (card.Value == 13 || card.Value == 10) {
             let index = players.indexOf(players.find(function(e) {
-                return e.Name == player.id;
-            })) + reverse;
-            console.log(index);
-            
+                return e.Name == player.Name;
+            })) + reverse;            
 
             if (index < 0) {
                 index = players.length - 1;
@@ -402,8 +383,6 @@ async function playCard(card, player, color) {
             }
 
             let tempPlayer = players[index];
-            console.log(tempPlayer);
-            console.log(index);
             updateCards(tempPlayer);
         }
     } else {
@@ -418,12 +397,14 @@ async function playCard(card, player, color) {
 
 async function updateCards(player) {
     console.log("updateCards");
+    console.log(player);
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + player.Name, {
         method: 'GET'
     });
 
     if (response.ok) {
         let result = await response.json();
+        diffCards = player.Cards.slice();
         player.Cards = result.Cards;
         player.Score = result.Score;
         updateScoreAfterDraw(player);
@@ -433,17 +414,15 @@ async function updateCards(player) {
 
 function updateCardsAfterDraw(player) {
     console.log("updateCardsAfterDraw");
-    console.log(player);
     let list = playerDivs.find(function(e) {
         return e.id == player.Name;
     }).parentNode.lastElementChild;
-    console.log(list);
     let length = list.children.length;
-    console.log(length);
-    console.log(player.Cards.length);
-    for (let i = length; i < player.Cards.length; i++) {
+    let difference = player.Cards.filter(e => !diffCards.includes(e));
+    console.log(difference);
+    for (let i = 0; i < difference.length; i++) {
         let img = document.createElement("img");
-        img.src = `images/${player.Cards[i].Color}_${player.Cards[i].Value}.png`;
+        img.src = `images/${difference[i].Color}_${difference[i].Value}.png`;
         let listElement = document.createElement("li");
         listElement.classList.add("playerCards");
         list.appendChild(listElement).appendChild(img);
@@ -458,11 +437,17 @@ function updateScoreAfterDraw(player) {
 }
 
 function updateScoreAfterPlay(player, score) {
+    console.log(player);
     let tempPlayer = players.find(function(e) {
-        return e.Name == player.id;
+        return e.Name == player.Name;
     });
+    console.log(player);
+    console.log(score);
+    console.log(tempPlayer);
     tempPlayer.Score -= score;
-    player.lastElementChild.textContent = "Points: " + tempPlayer.Score;
+    playerDivs.find(function(e) {
+        return e.id == player.Name;
+    }).lastElementChild.textContent = "Points: " + tempPlayer.Score;
 }
 
 document.getElementById("ziehen").addEventListener("click", ziehen);
@@ -477,33 +462,18 @@ async function ziehen() {
         let result = await response.json();
         console.log("ziehen")
         console.log(result);
-        console.log(result.Player);
-        //console.log(testPlayer.Score);
-        //console.log(result.Card.Score);
-        // cardScore = result.Card.Score;
         let tempPlayer = players.find(function(e) {
             return e.Name == result.Player;
         });
+        diffCards = tempPlayer.Cards.slice();
         updatePlayerAfterDraw(tempPlayer, result.Card);
         updateCardsAfterDraw(tempPlayer);
         updateScoreAfterDraw(tempPlayer);        
 
-        playerTurn = result.NextPlayer;
+        playerTurn = players.find(function(e) {
+            return e.Name == result.NextPlayer;
+        });
         displayCurrentPlayer(playerTurn);
-
-        /*
-        console.log(document.getElementById(result.Player).nextSibling);
-        const img = document.createElement("img");
-
-        console.log(result.Card);
-
-
-
-        img.src = `images/${result.Card.Color}_${result.Card.Value}.png`;
-        const listElement = document.createElement("li");
-        listElement.classList.add("playerCards");
-        document.getElementById(result.Player).nextSibling.appendChild(listElement).appendChild(img);
-        */
     } else {
         alert("HTTP-Error: " + response.status)
     }
@@ -512,8 +482,60 @@ async function ziehen() {
 
 function updatePlayerAfterDraw(player, card) {
     console.log("updatePlayerAfterDraw");
-    console.log(player);
-    console.log(card);
     player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
     player.Score += card.Score;
+}
+
+function makeItFire() {
+    const particles = [];
+	const color = randomColor();
+	
+	const particle = document.createElement('span');
+	particle.classList.add('particle', 'move');
+	
+	const { x, y } = randomLocation();
+	particle.style.setProperty('--x', x);
+	particle.style.setProperty('--y', y);
+	particle.style.background = color;
+	btn.style.background = color;
+	
+	btn.appendChild(particle);
+	
+	particles.push(particle);
+	
+	setTimeout(() => {
+	
+		for(let i=0; i<100; i++) {
+			const innerP = document.createElement('span');
+			innerP.classList.add('particle', 'move');
+			innerP.style.transform = `translate(${x}, ${y})`;
+
+			const xs = Math.random() * 200 - 100 + 'px';
+			const ys = Math.random() * 200 - 100 + 'px';
+			innerP.style.setProperty('--x', `calc(${x} + ${xs})`);
+			innerP.style.setProperty('--y', `calc(${y} + ${ys})`);
+			innerP.style.animationDuration = Math.random() * 300 + 200 + 'ms';
+			innerP.style.background = color;
+			
+			btn.appendChild(innerP);
+			particles.push(innerP)
+		}
+		
+		setTimeout(() => {
+			particles.forEach(particle => {
+				particle.remove();
+			})
+		}, 1000)
+	}, 1000);
+}
+
+function randomLocation() {
+	return {
+		x: Math.random() * window.innerWidth - window.innerWidth / 2 + 'px',
+		y: Math.random() * window.innerHeight - window.innerHeight / 2 + 'px',
+	}
+}
+
+function randomColor() {
+	return `hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`;
 }

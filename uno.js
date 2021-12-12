@@ -392,6 +392,7 @@ async function playCard(card, player, color) {
         console.log(result);
 
         if (playerTurn.Name == result.Player) {
+            startFirework();
             let loosers = players.filter(function(e) {
                 return e.Name != result.Player;
             });
@@ -563,56 +564,17 @@ function updatePlayerAfterDraw(player, card) {
     player.Score += card.Score;
 }
 
-function makeItFire() {
-    const particles = [];
-	const color = randomColor();
-	
-	const particle = document.createElement('span');
-	particle.classList.add('particle', 'move');
-	
-	const { x, y } = randomLocation();
-	particle.style.setProperty('--x', x);
-	particle.style.setProperty('--y', y);
-	particle.style.background = color;
-	btn.style.background = color;
-	
-	btn.appendChild(particle);
-	
-	particles.push(particle);
-	
-	setTimeout(() => {
-	
-		for(let i=0; i<100; i++) {
-			const innerP = document.createElement('span');
-			innerP.classList.add('particle', 'move');
-			innerP.style.transform = `translate(${x}, ${y})`;
+function startFirework() {
+    const firework = document.createElement("div");
+    const before = document.createElement("div");
+    const after = document.createElement("div");
 
-			const xs = Math.random() * 200 - 100 + 'px';
-			const ys = Math.random() * 200 - 100 + 'px';
-			innerP.style.setProperty('--x', `calc(${x} + ${xs})`);
-			innerP.style.setProperty('--y', `calc(${y} + ${ys})`);
-			innerP.style.animationDuration = Math.random() * 300 + 200 + 'ms';
-			innerP.style.background = color;
-			
-			btn.appendChild(innerP);
-			particles.push(innerP)
-		}
-		
-		setTimeout(() => {
-			particles.forEach(particle => {
-				particle.remove();
-			})
-		}, 1000)
-	}, 1000);
-}
+    firework.classList.add("pyro");
+    before.classList.add("before");
+    after.classList.add("after");
 
-function randomLocation() {
-	return {
-		x: Math.random() * window.innerWidth - window.innerWidth / 2 + 'px',
-		y: Math.random() * window.innerHeight - window.innerHeight / 2 + 'px',
-	}
-}
-
-function randomColor() {
-	return `hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`;
+    const body = document.body;
+    firework.appendChild(before);
+    firework.appendChild(after);
+    body.appendChild(firework);
 }

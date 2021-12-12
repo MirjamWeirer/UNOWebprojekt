@@ -45,7 +45,7 @@ body {
     color: #ece0f5;
 }
 
-#play, #close {
+#play, #close, #playAgain{
     background-color: #533a64;
     border: none;
 }

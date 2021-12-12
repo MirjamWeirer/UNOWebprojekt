@@ -77,18 +77,18 @@ function greet() {
     welcomeMessage.classList.toggle('greeting');
 
     const desk = document.getElementById("desk");
-    
+
 
     setTimeout(function() {
         desk.classList.toggle('hiddenElement');
-    desk.classList.toggle('start');
-    }, 3000);    
+        desk.classList.toggle('start');
+    }, 3000);
 }
 
 function playGame(result) {
     console.log("playGame");
-    playId = result.Id;    
-    
+    playId = result.Id;
+
 
     for (let i = 0; i < result.Players.length; i++) {
         let player = result.Players[i];
@@ -104,12 +104,12 @@ function playGame(result) {
 
     topCard = new Card(result.TopCard.Color, result.TopCard.Text, result.TopCard.Value, result.TopCard.Score);
 
-    
+
 
     if (topCard.Value == 10) {
         let index = players.indexOf(players.find(function(e) {
             return e.Name == playerTurn.Name;
-        })) - reverse;  
+        })) - reverse;
         index = checkOverflow(index);
 
         updateMargin(playerDivs.find(function(e) {
@@ -231,7 +231,7 @@ async function getCardToPlay(e) {
             removeCardFromArr(indexOfClicked);
             updateMargin(e.currentTarget);
             checkColor(cardToPlay, playerTurn, colorWish);
-            
+
         } else {
             console.log("in false");
             e.target.parentNode.classList.add("shakeIt");
@@ -251,7 +251,7 @@ function updateMargin(ul) {
     }
 
     console.log(margin);
-    
+
 
     for (let i = 0; i < ul.children.length; i++) {
         ul.children[i].style.marginRight = `${margin}px`;
@@ -288,12 +288,13 @@ function checkCard(card) {
         }
         if (topCard.Value >= 13 && card.Value >= 13) {
             alert("Color has to stay the same");
-            colorWish = topCard.Color;
+            //colorWish = topCard.Color;
+            return false;
         } else {
             // colorWish = prompt("Welche Farbe?")
             colorWish = "choose";
         }
-        return true; 
+        return true;
     } else if (topCard.Color == card.Color || topCard.Value == card.Value) {
         console.log("in true");
         colorWish = "";
@@ -314,7 +315,7 @@ function removeCardFromArr(index) {
 function processColorWish(colorWish, cardValue) {
     let color;
     switch (colorWish.toUpperCase) {
-        case 'R': 
+        case 'R':
             color = "Red";
             break;
         case 'B':
@@ -362,7 +363,7 @@ function checkColor(card, player, color) {
 
 async function getColor() {
     let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
-    modal.show(); 
+    modal.show();
     console.log("colorWish" + colorWish);
     colorPickerForm = document.getElementById("colorPickerForm");
     colorPickerForm.addEventListener("click", function(e) {
@@ -416,7 +417,7 @@ async function playCard(card, player, color) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
         method: 'PUT'
     });
-
+    console.log(response);
     if (response.ok) {
         let result = await response.json();
 
@@ -460,9 +461,9 @@ async function playCard(card, player, color) {
         if (card.Value > 12) {
             topCard = processColorWish(color, card.Value);
         } else {
-           topCard = card; 
+            topCard = card;
         }
-        
+
         showTopCard(topCard);
 
         if (card.Value == 12) {
@@ -477,8 +478,8 @@ async function playCard(card, player, color) {
 
         let index = players.indexOf(players.find(function(e) {
             return e.Name == playerTurn.Name;
-        })) - reverse;            
-    
+        })) - reverse;
+
         if (index < 0) {
             index = players.length - 1;
         }
@@ -491,7 +492,7 @@ async function playCard(card, player, color) {
 
         updateScoreAfterPlay(card.Score);
 
-        
+
 
         if (card.Value == 13 || card.Value == 10) {
             updateCards();
@@ -514,8 +515,8 @@ async function updateCards() {
 
     let index = indexCurr - reverse;
     if (index < 0) {
-        index = players.length-1;
-    } 
+        index = players.length - 1;
+    }
     if (index > players.length - 1) {
         index = 0;
     }
@@ -541,7 +542,7 @@ function updateCardsAfterDraw(player) {
     console.log(list.firstChild);
     console.log(list.firstChild.offsetWidth);
 
-    while(list.firstChild) {
+    while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
 
@@ -550,7 +551,7 @@ function updateCardsAfterDraw(player) {
 
     console.log(playerDivs[0]);
     console.log(playerDivs[0].offsetWidth);
-    
+
 
     if (player.Cards.length > 7) {
         let temp = player.Cards.length * 85 - 700;
@@ -601,8 +602,8 @@ function updateScoreAfterPlay(score) {
 
 function checkOverflow(index) {
     if (index < 0) {
-        index = players.length-1;
-    } 
+        index = players.length - 1;
+    }
     if (index > players.length - 1) {
         index = 0;
     }
@@ -626,7 +627,7 @@ async function ziehen() {
         });
         updatePlayerAfterDraw(tempPlayer, result.Card);
         updateCardsAfterDraw(tempPlayer);
-        updateScoreAfterDraw(tempPlayer);        
+        updateScoreAfterDraw(tempPlayer);
 
         playerTurn = players.find(function(e) {
             return e.Name == result.NextPlayer;

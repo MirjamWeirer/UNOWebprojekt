@@ -121,6 +121,52 @@ body {
     }
 }
 
+@keyframes shout {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(5);
+    }
+    30% {
+        transform: scale(3);
+    }
+    40% {
+        transform: scale(4);
+    } 
+    50% {
+        transform: scale(2);
+    }
+    60% {
+        transform: scale(3);
+    }
+    70% {
+        transform: scale(1);
+    }
+    80% {
+        transform: scale(2);
+    }
+    100% {
+        display: none;
+        opacity: 0;
+        transform: scale(0) rotateX(90deg);
+    }
+}
+
+.shoutUno {
+    visibility: visible;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    margin-left: -200px;
+    color: #e751ec;
+    animation: greet 3s ease-in-out forwards;
+}
+
 .start {
     visibility: visible;
     animation: startGame 1.5s linear forwards;

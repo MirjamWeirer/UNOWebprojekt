@@ -82,9 +82,7 @@ function greet() {
     setTimeout(function() {
         desk.classList.toggle('hiddenElement');
     desk.classList.toggle('start');
-    }, 3000);
-    
-    
+    }, 3000);    
 }
 
 function playGame(result) {
@@ -256,7 +254,7 @@ function checkCard(card) {
             console.log("+4 not allowed");
             return false;
         }
-        if (topCard.Value >= 13 && card.Value == 13) {
+        if (topCard.Value >= 13 && card.Value >= 13) {
             alert("Color has to stay the same");
             colorWish = topCard.Color;
         } else {
@@ -382,6 +380,7 @@ function colorPicked(e) {
 
 async function playCard(card, player, color) {
     console.log("playCard");
+    console.log(player);
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
         method: 'PUT'
     });
@@ -402,7 +401,7 @@ async function playCard(card, player, color) {
                 points += loosers[i].Score;
             }
             console.log("Points: " + points);
-            document.getElementById("winnerMessage").firstChild.textContent = "Points: " + points;
+            document.getElementById("winnerMessage").firstChild.textContent = "Player " + playerTurn.Name + " won with " + points + " points.";
 
             let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
             modal.show();
@@ -414,8 +413,10 @@ async function playCard(card, player, color) {
             console.log("end of game");
         }
 
-        if (result.Cards.length == 0) {
-            console.log("end of game 2");
+        if (playerTurn.Cards.length == 1) {
+            const unoMessage = document.getElementById("uno");
+            unoMessage.classList.toggle('hiddenElement');
+            unoMessage.classList.toggle('shoutUno');
         }
 
         playerTurn = players.find(function(e) {
@@ -432,28 +433,36 @@ async function playCard(card, player, color) {
         
         showTopCard(topCard);
 
-        console.log("---" + player);
-
-        updateScoreAfterPlay(player, card.Score);
-
         if (card.Value == 12) {
             reverse *= -1;
         }
 
+        console.log("---");
+        console.log(player);
+        console.log(players.indexOf(players.find(function(e) {
+            return e.Name == playerTurn.Name;
+        })))
+
+        let index = players.indexOf(players.find(function(e) {
+            return e.Name == playerTurn.Name;
+        })) - reverse;            
+    
+        if (index < 0) {
+            index = players.length - 1;
+        }
+        if (index > players.length - 1) {
+            index = 0;
+        }
+        console.log(index);
+        console.log(reverse);
+        console.log(players[index]);
+
+        updateScoreAfterPlay(card.Score);
+
+        
+
         if (card.Value == 13 || card.Value == 10) {
-            let index = players.indexOf(players.find(function(e) {
-                return e.Name == player.Name;
-            })) + reverse;            
-
-            if (index < 0) {
-                index = players.length - 1;
-            }
-            if (index > players.length - 1) {
-                index = 0;
-            }
-
-            let tempPlayer = players[index];
-            updateCards(tempPlayer);
+            updateCards();
         }
     } else {
         document.getElementById("errorMessage").firstChild.textContent = "HTTP-Error: " + response.status;
@@ -465,20 +474,29 @@ async function playCard(card, player, color) {
     }
 }
 
-async function updateCards(player) {
+async function updateCards() {
     console.log("updateCards");
-    console.log(player);
-    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + player.Name, {
+    let indexCurr = players.indexOf(players.find(function(e) {
+        return e.Name == playerTurn.Name;
+    }));
+
+    let index = indexCurr - reverse;
+    if (index < 0) {
+        index = players.length-1;
+    } 
+    if (index > players.length - 1) {
+        index = 0;
+    }
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + playId + "?playerName=" + players[index].Name, {
         method: 'GET'
     });
 
     if (response.ok) {
         let result = await response.json();
-        diffCards = player.Cards.slice();
-        player.Cards = result.Cards;
-        player.Score = result.Score;
-        updateScoreAfterDraw(player);
-        updateCardsAfterDraw(player);
+        players[index].Cards = result.Cards;
+        players[index].Score = result.Score;
+        updateScoreAfterDraw(players[index]);
+        updateCardsAfterDraw(players[index]);
     }
 }
 
@@ -510,22 +528,37 @@ function updateScoreAfterDraw(player) {
     }).lastElementChild.textContent = "Points: " + player.Score;
 }
 
-function updateScoreAfterPlay(player, score) {
-    console.log(player);
-    let tempPlayer = players.find(function(e) {
-        return e.Name == player.Name;
-    });
-    console.log(player);
-    console.log(score);
-    console.log(tempPlayer);
-    tempPlayer.Score -= score;
-    console.log("draw score")
-    console.log(tempPlayer);
-    console.log(player);
+function updateScoreAfterPlay(score) {
+    console.log("updateScoreAfterPlay");
+    let indexCurr = players.indexOf(players.find(function(e) {
+        return e.Name == playerTurn.Name;
+    }));
+
+    let index = indexCurr - reverse;
+    index = checkOverflow(index);
+    if (topCard.Value == 13 || topCard.Value == 10 || topCard.Value == 11) {
+        index = index - reverse;
+        index = checkOverflow(index);
+    }
+    console.log(playerTurn);
+    players[index].Score -= score;
+
+    console.log(players[index]);
+
 
     playerDivs.find(function(e) {
-        return e.id == player.Name;
-    }).lastElementChild.textContent = "Points: " + tempPlayer.Score;
+        return e.id == players[index].Name;
+    }).lastElementChild.textContent = "Points: " + players[index].Score;
+}
+
+function checkOverflow(index) {
+    if (index < 0) {
+        index = players.length-1;
+    } 
+    if (index > players.length - 1) {
+        index = 0;
+    }
+    return index;
 }
 
 document.getElementById("ziehen").addEventListener("click", ziehen);
@@ -543,7 +576,6 @@ async function ziehen() {
         let tempPlayer = players.find(function(e) {
             return e.Name == result.Player;
         });
-        diffCards = tempPlayer.Cards.slice();
         updatePlayerAfterDraw(tempPlayer, result.Card);
         updateCardsAfterDraw(tempPlayer);
         updateScoreAfterDraw(tempPlayer);        

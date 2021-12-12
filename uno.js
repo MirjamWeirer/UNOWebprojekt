@@ -240,12 +240,14 @@ function mapCardScore(color, value) {
 function checkCard(card) {
     console.log("checkCard");
     if (card.Color == "Black") {
-        currPlayer = players.find(function(e) {
+        let currPlayer = players.find(function(e) {
             return e.Name == playerTurn;
         })
-        if (card.Value == 13 && (currPlayer.Cards.find(function(e) {
+        let foundCard = currPlayer.Cards.find(function(e) {
             return e.Color == topCard.Color;
-        }))) {
+        })
+        console.log(foundCard);
+        if (card.Value == 13 && typeof(foundCard) !== 'undefined') {
             console.log("+4 not allowed");
             return false;
         }

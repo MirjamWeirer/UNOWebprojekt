@@ -392,6 +392,24 @@ async function playCard(card, player, color) {
         console.log(result);
 
         if (playerTurn.Name == result.Player) {
+            let loosers = players.filter(function(e) {
+                return e.Name != result.Player;
+            });
+            console.log(loosers);
+            let points = 0;
+            for (let i = 0; i < loosers.length; i++) {
+                points += loosers[i].Score;
+            }
+            console.log("Points: " + points);
+            document.getElementById("winnerMessage").firstChild.textContent = "Points: " + points;
+
+            let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
+            modal.show();
+            document.getElementById("playAgain").addEventListener("click", function(e) {
+                window.location.reload();
+                modal.hide();
+            });
+
             console.log("end of game");
         }
 
@@ -500,6 +518,10 @@ function updateScoreAfterPlay(player, score) {
     console.log(score);
     console.log(tempPlayer);
     tempPlayer.Score -= score;
+    console.log("draw score")
+    console.log(tempPlayer);
+    console.log(player);
+
     playerDivs.find(function(e) {
         return e.id == player.Name;
     }).lastElementChild.textContent = "Points: " + tempPlayer.Score;

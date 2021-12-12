@@ -391,9 +391,12 @@ async function playCard(card, player, color) {
 
         console.log(result);
 
-        if (result.Cards.length == 0) {
+        if (playerTurn.Name == result.Player) {
             console.log("end of game");
-            makeItFire();
+        }
+
+        if (result.Cards.length == 0) {
+            console.log("end of game 2");
         }
 
         playerTurn = players.find(function(e) {
@@ -465,12 +468,16 @@ function updateCardsAfterDraw(player) {
     let list = playerDivs.find(function(e) {
         return e.id == player.Name;
     }).parentNode.lastElementChild;
-    let length = list.children.length;
-    let difference = player.Cards.filter(e => !diffCards.includes(e));
-    console.log(difference);
-    for (let i = 0; i < difference.length; i++) {
+
+    while(list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+
+    console.log(player.Cards);
+
+    for (let i = 0; i < player.Cards.length; i++) {
         let img = document.createElement("img");
-        img.src = `images/${difference[i].Color}_${difference[i].Value}.png`;
+        img.src = `images/${player.Cards[i].Color}_${player.Cards[i].Value}.png`;
         let listElement = document.createElement("li");
         listElement.classList.add("playerCards");
         list.appendChild(listElement).appendChild(img);

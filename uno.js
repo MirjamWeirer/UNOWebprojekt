@@ -214,6 +214,7 @@ async function getCardToPlay(e) {
             console.log(playerTurn);
             e.currentTarget.removeChild(e.target.parentNode);
             removeCardFromArr(indexOfClicked);
+            updateMargin(e.currentTarget);
             checkColor(cardToPlay, playerTurn, colorWish);
             
         } else {
@@ -223,6 +224,19 @@ async function getCardToPlay(e) {
                 e.target.parentNode.classList.remove("shakeIt");
             }, 1000);
         }
+    }
+}
+
+function updateMargin(ul) {
+    let margin = 3;
+    if (ul.children.length > 7) {
+        let temp = playerTurn.Cards.length * 85 - 700;
+        margin = (temp / playerTurn.Cards.length + 1) * (-1);
+    }
+    
+
+    for (let i = 0; i < ul.children.length; i++) {
+        ul.children[i].style.marginRight = `${margin}px`;
     }
 }
 
@@ -506,17 +520,33 @@ function updateCardsAfterDraw(player) {
         return e.id == player.Name;
     }).parentNode.lastElementChild;
 
+    console.log(list.firstChild);
+    console.log(list.firstChild.offsetWidth);
+
     while(list.firstChild) {
         list.removeChild(list.firstChild);
     }
 
     console.log(player.Cards);
+    let margin = 0;
+
+    console.log(playerDivs[0]);
+    console.log(playerDivs[0].offsetWidth);
+    
+
+    if (player.Cards.length > 7) {
+        let temp = player.Cards.length * 85 - 700;
+        margin = temp / player.Cards.length + 1;
+    } else {
+        margin = 0;
+    }
 
     for (let i = 0; i < player.Cards.length; i++) {
         let img = document.createElement("img");
         img.src = `images/${player.Cards[i].Color}_${player.Cards[i].Value}.png`;
         let listElement = document.createElement("li");
         listElement.classList.add("playerCards");
+        listElement.style.marginRight = `-${margin}px`;
         list.appendChild(listElement).appendChild(img);
     }
 }

@@ -585,7 +585,13 @@ async function ziehen() {
         });
         displayCurrentPlayer(playerTurn);
     } else {
-        alert("HTTP-Error: " + response.status)
+        document.getElementById("errorMessage").firstChild.textContent = "HTTP-Error: " + response.status;
+        let modal = new bootstrap.Modal(document.getElementById("errorModal"));
+        modal.show();
+        document.getElementById("close").addEventListener("click", function(e) {
+            modal.hide();
+        });
+        document.getElementById("desk").classList.toggle('hiddenElement');
     }
     //return result.Player;
 }

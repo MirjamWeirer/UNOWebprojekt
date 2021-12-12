@@ -213,13 +213,13 @@ async function getCardToPlay(e) {
         }, 1000);
     } else {
         if (checkCard(cardToPlay) == true) {
-            /*playCard(cardToPlay, e.currentTarget.parentNode.firstElementChild, colorWish);*/
             console.log(playerTurn);
             e.currentTarget.removeChild(e.target.parentNode);
             removeCardFromArr(indexOfClicked);
-            playCard(cardToPlay, playerTurn, colorWish);
+            checkColor(cardToPlay, playerTurn, colorWish);
             
         } else {
+            console.log("in false");
             e.target.parentNode.classList.add("shakeIt");
             setTimeout(function() {
                 e.target.parentNode.classList.remove("shakeIt");
@@ -246,8 +246,9 @@ function checkCard(card) {
     let currPlayer = players.find(function(e) {
         return e.Name == playerTurn.Name;
     })
+    console.log(card);
+    console.log(topCard);
     if (card.Color == "Black") {
-        
         let foundCard = currPlayer.Cards.find(function(e) {
             return e.Color == topCard.Color;
         })
@@ -255,17 +256,20 @@ function checkCard(card) {
             console.log("+4 not allowed");
             return false;
         }
-        if (topCard.Value >= 14 && card.Value == 13) {
+        if (topCard.Value >= 13 && card.Value == 13) {
             alert("Color has to stay the same");
             colorWish = topCard.Color;
         } else {
-            colorWish = prompt("Welche Farbe?")
+            // colorWish = prompt("Welche Farbe?")
+            colorWish = "choose";
         }
         return true; 
     } else if (topCard.Color == card.Color || topCard.Value == card.Value) {
+        console.log("in true");
         colorWish = "";
         return true;
     } else {
+        console.log("false");
         return false;
     }
 }
@@ -299,14 +303,58 @@ function processColorWish(colorWish, cardValue) {
     return new Card(color, "", cardValue, 0);
 }
 
+function checkColor(card, player, color) {
+    if (color == "choose") {
+        let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
+        modal.show();
+        colorPickerForm.addEventListener("click", function(e) {
+            e.preventDefault;
+            if (e.target.id == "red") {
+                colorWish = "Red";
+                console.log(colorWish);
+            } else if (e.target.id == "blue") {
+                colorWish = "Blue";
+                console.log(colorWish);
+            } else if (e.target.id == "green") {
+                colorWish = "Green";
+                console.log(colorWish);
+            } else if (e.target.id == "yellow") {
+                colorWish = "Yellow";
+                console.log(colorWish);
+            }
+            playCard(card, player, colorWish);
+            modal.hide();
+        });
+    } else {
+        playCard(card, player, colorWish);
+    }
+}
+
 async function getColor() {
     let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
     modal.show(); 
     console.log("colorWish" + colorWish);
-    colorWish = await getColorWish();
+    colorPickerForm = document.getElementById("colorPickerForm");
+    colorPickerForm.addEventListener("click", function(e) {
+        e.preventDefault;
+        if (e.target.id == "red") {
+            colorWish = "Red";
+            console.log(colorWish);
+        } else if (e.target.id == "blue") {
+            colorWish = "Blue";
+            console.log(colorWish);
+        } else if (e.target.id == "green") {
+            colorWish = "Green";
+            console.log(colorWish);
+        } else if (e.target.id == "yellow") {
+            colorWish = "Yellow";
+            console.log(colorWish);
+        }
+    });
     modal.hide();
     console.log("colorWish" + colorWish);
     console.log("test2");
+    return colorWish;
 }
 
 function getColorWish() {
@@ -334,7 +382,7 @@ function colorPicked(e) {
 
 async function playCard(card, player, color) {
     console.log("playCard");
-    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + color, {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
         method: 'PUT'
     });
 

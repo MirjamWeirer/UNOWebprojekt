@@ -275,6 +275,14 @@ function switchColor(color) {
             return "Yellow";
         case "Grün":
             return "Green";
+        case 'rot':
+            return "Red";
+        case 'blau':
+            return "Blue";
+        case 'gelb':
+            return "Yellow";
+        case "grün":
+            return "Green";
     }
 }
 
@@ -296,6 +304,11 @@ async function playCard(card, player, color) {
             return e.Name == result.Player;
         }).Cards);
         console.log(color)
+        if (color != '') {
+            color = switchColor(color);
+            card.Color = color;
+
+        }
         topCard = card;
         showTopCard(topCard);
 

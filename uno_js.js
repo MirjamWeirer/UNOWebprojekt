@@ -421,6 +421,7 @@ async function ziehen() {
 
     if (response.ok) {
         let result = await response.json();
+        let tempPlayer = result.Player;
         console.log("ziehen")
         console.log(result);
         console.log(result.Player);
@@ -428,9 +429,26 @@ async function ziehen() {
         //console.log(result.Card.Score);
         cardScore = result.Card.Score;
 
-        if (result.Players == testPlayer.Players) {
-            //testPlayer.Players.Score += result.Card.Score;
-            console.log(testPlayer.Players.Score);
+        if (result.Player == tempPlayer) {
+            for (let i = 0; i < playerObjects.length; i++) {
+                if (result.Player == playerObjects[i].Name) {
+
+                    playerObjects[i].Score += cardScore;
+                    console.log(playerObjects[i].Score);
+                    playerDivs.find(function(e) {
+                        return e.id == playerObjects[i].Name;
+                    }).lastElementChild.textContent = "Points: " + playerObjects[i].Score;
+
+                    //playerDivs.lastElementChild.textContent = "Points: " + playerObjects[i].Score;
+
+                }
+            }
+
+            playerTurn = result.NextPlayer;
+            //tempPlayer = tempPlayer + testScore;
+            // updateScoreAfterDraw(result.Player);
+            //console.log(tempPlayer.Score);
+
         }
 
         displayCurrentPlayer(result.NextPlayer);

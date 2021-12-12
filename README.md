@@ -12,6 +12,7 @@ Das ist unser super tolles Uno Projekt.
 - für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa) -coole idee
 - karte nach farbwunsch liegt nicht am richtigen platz
 - export/import functions (https://stackoverflow.com/questions/3809862/can-we-call-the-function-written-in-one-javascript-in-another-js-file)
+- lösung für mehr karten finden
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:

@@ -202,6 +202,23 @@ async function getCardToPlay(e) {
     const cardScore = mapCardScore(card[0], card[1]);
     const cardToPlay = new Card(card[0], "", card[1], cardScore);
 
+    console.log("------------------");
+    let arr2 = e.target.parentNode.parentNode;
+    let arr3 = e.target.parentNode;
+    console.log(arr2);
+    console.log(arr2.children);
+    console.log(Array.from(arr2.children));
+    console.log(arr3);
+    console.log(Array.from(arr3));
+    console.log("------------------------");
+    console.log("++++++++++++++++");
+    let clicked = e.target.closest('li');
+    console.log(clicked);
+    let parentUl = Array.from(arr2.children);
+    let indexOfClicked = parentUl.indexOf(clicked);
+    console.log(indexOfClicked);
+    console.log("++++++++++++++++");
+
     if (e.currentTarget.parentNode.firstElementChild.id != playerTurn) {
         e.preventDefault;
         // animation?
@@ -215,6 +232,7 @@ async function getCardToPlay(e) {
         if (checkCard(cardToPlay) == true) {
             playCard(cardToPlay, e.currentTarget.parentNode.firstElementChild, colorWish);
             e.currentTarget.removeChild(e.target.parentNode);
+            removeCardFromArr(indexOfClicked);
         } else {
             e.target.parentNode.classList.add("shakeIt");
             setTimeout(function() {
@@ -239,10 +257,11 @@ function mapCardScore(color, value) {
 
 function checkCard(card) {
     console.log("checkCard");
+    let currPlayer = players.find(function(e) {
+        return e.Name == playerTurn;
+    })
     if (card.Color == "Black") {
-        let currPlayer = players.find(function(e) {
-            return e.Name == playerTurn;
-        })
+        
         let foundCard = currPlayer.Cards.find(function(e) {
             return e.Color == topCard.Color;
         })
@@ -263,6 +282,18 @@ function checkCard(card) {
     } else {
         return false;
     }
+}
+
+function removeCardFromArr(index) {
+    console.log("removeCardFromArr");
+    console.log(index);
+    console.log(players.find(function(e) {
+        return e.Name == playerTurn;
+    }).Cards);
+    let test = players.find(function(e) {
+        return e.Name == playerTurn;
+    }).Cards.splice(index, 1);
+    console.log(test);
 }
 
 function processColorWish(colorWish, cardValue) {
@@ -402,11 +433,14 @@ async function updateCards(player) {
 
 function updateCardsAfterDraw(player) {
     console.log("updateCardsAfterDraw");
+    console.log(player);
     let list = playerDivs.find(function(e) {
         return e.id == player.Name;
     }).parentNode.lastElementChild;
-    let length = list.children.length;
     console.log(list);
+    let length = list.children.length;
+    console.log(length);
+    console.log(player.Cards.length);
     for (let i = length; i < player.Cards.length; i++) {
         let img = document.createElement("img");
         img.src = `images/${player.Cards[i].Color}_${player.Cards[i].Value}.png`;
@@ -477,6 +511,9 @@ async function ziehen() {
 }
 
 function updatePlayerAfterDraw(player, card) {
+    console.log("updatePlayerAfterDraw");
+    console.log(player);
+    console.log(card);
     player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
     player.Score += card.Score;
 }

@@ -101,7 +101,22 @@ function playGame(result) {
     })
     console.log(result.NextPlayer);
 
+
     topCard = new Card(result.TopCard.Color, result.TopCard.Text, result.TopCard.Value, result.TopCard.Score);
+
+    
+
+    if (topCard.Value == 10) {
+        let index = players.indexOf(players.find(function(e) {
+            return e.Name == playerTurn.Name;
+        })) - reverse;  
+        index = checkOverflow(index);
+
+        updateMargin(playerDivs.find(function(e) {
+            return e.id == players[index].Name;
+        }).parentNode.lastElementChild);
+    }
+
     showTopCard(topCard);
     displayCurrentPlayer(playerTurn);
 }
@@ -163,7 +178,7 @@ function mapCards(player) {
 
     addListeners(ul);
 
-    return player.Cards.map(function(el) {
+    player.Cards.map(function(el) {
         const img = document.createElement("img");
         img.src = `images/${el.Color}_${el.Value}.png`;
         const listElement = document.createElement("li");
@@ -230,9 +245,12 @@ async function getCardToPlay(e) {
 function updateMargin(ul) {
     let margin = 3;
     if (ul.children.length > 7) {
-        let temp = playerTurn.Cards.length * 85 - 700;
+        let temp = ul.children.length * 85 - 700;
+        console.log(temp);
         margin = (temp / playerTurn.Cards.length + 1) * (-1);
     }
+
+    console.log(margin);
     
 
     for (let i = 0; i < ul.children.length; i++) {

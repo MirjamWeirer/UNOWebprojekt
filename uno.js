@@ -287,7 +287,12 @@ function checkCard(card) {
             return false;
         }
         if (topCard.Value >= 13 && card.Value >= 13) {
-            alert("Color has to stay the same");
+            document.getElementById("errorMessage").firstChild.textContent = "Color has to stay the same";
+            let modal = new bootstrap.Modal(document.getElementById("errorModal"));
+            modal.show();
+            document.getElementById("close").addEventListener("click", function(e) {
+                modal.hide();
+            });
             //colorWish = topCard.Color;
             return false;
         } else {

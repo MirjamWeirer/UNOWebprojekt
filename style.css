@@ -8,6 +8,10 @@ body {
     background-size: cover;
 }
 
+#desk {
+    transform: scale(0.5);
+}
+
 .box-shadow {
     animation: boxShadow 1s;
 }
@@ -98,7 +102,7 @@ body {
     left: 50%;
     margin-left: -200px;
     color: #533a64;
-    animation: greet 4s ease-in-out forwards;
+    animation: greet 3s ease-in-out forwards;
 }
 
 @keyframes greet {
@@ -215,6 +219,7 @@ ul {
     padding-bottom: 3px;
     padding-right: 70px;
     width: 75%;
+    height: 30px;;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -227,11 +232,15 @@ ul {
     justify-content: center;
     align-items: center;
     aspect-ratio: 1 / 1;
-    width: fit-content;
-    min-width: 150px;
-    min-height: 150px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     background: -webkit-radial-gradient(center, ellipse cover, rgba(236, 224, 245,1) 0%,rgba(255,255,255,0) 70%);
     font-size: xx-large;
     /* animation: gradient 5s ease-in-out infinite alternate;*/
+}
+
+#currentPlayer {
+    color: #533a64;
+    text-align: center;
 }

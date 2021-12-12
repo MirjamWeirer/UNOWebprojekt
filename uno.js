@@ -108,7 +108,12 @@ function playGame(result) {
 
 function displayCurrentPlayer(currentPlayer) {
     console.log("displayCurrentPlayer");
-    const div = document.getElementById("current").firstChild;
+    const div = document.getElementById("current").firstElementChild;
+    console.log(document.getElementById("current").lastElementChild);
+    console.log(document.getElementById("current").firstElementChild);
+    console.log("test");
+    console.log(div);
+    console.log(document.getElementById("current"));
     div.textContent = currentPlayer.toUpperCase();
 
     for (let i = 0; i < playerNames.length; i++) {
@@ -210,6 +215,11 @@ async function getCardToPlay(e) {
         if (checkCard(cardToPlay) == true) {
             playCard(cardToPlay, e.currentTarget.parentNode.firstElementChild, colorWish);
             e.currentTarget.removeChild(e.target.parentNode);
+        } else {
+            e.target.parentNode.classList.add("shakeIt");
+            setTimeout(function() {
+                e.target.parentNode.classList.remove("shakeIt");
+            }, 1000);
         }
     }
 }
@@ -230,7 +240,15 @@ function mapCardScore(color, value) {
 function checkCard(card) {
     console.log("checkCard");
     if (card.Color == "Black") {
-        console.log(card);
+        currPlayer = players.find(function(e) {
+            return e.Name == playerTurn;
+        })
+        if (card.Value == 13 && (currPlayer.Cards.find(function(e) {
+            return e.Color == topCard.Color;
+        }))) {
+            console.log("+4 not allowed");
+            return false;
+        }
         colorWish = prompt("Welche Farbe?")
         // getColor();
         

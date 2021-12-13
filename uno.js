@@ -316,6 +316,15 @@ function addListeners(ul) {
     ul.addEventListener("click", getCardToPlay)
 }
 
+//------------------------------------------------------------------------------
+//  Get and process the chosen card
+//  1) Get card info and map its score accordingly
+//  2) Find out which list element was clicked (for removing it afterwards)
+//  3) Check if the right player clicked - animation otherwise
+//  4) Check if card was chosen according to the rules - animation otherwise
+//  5) If card OK - remove it from the card array from the player, update
+//      margin between cards if necessary, check color
+//------------------------------------------------------------------------------
 async function getCardToPlay(e) {
     let arr = e.target.src.split("/");
     const card = arr[arr.length - 1].split(".")[0].split("_");
@@ -345,7 +354,6 @@ async function getCardToPlay(e) {
             removeCardFromArr(indexOfClicked);
             updateMargin(e.currentTarget);
             checkColor(cardToPlay, playerTurn, colorWish);
-
         } else {
             e.target.parentNode.classList.add("shakeIt");
             setTimeout(function() {
@@ -355,6 +363,9 @@ async function getCardToPlay(e) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  Update margin if there so many cards that they would not fit.
+//------------------------------------------------------------------------------
 function updateMargin(ul) {
     let margin = 3;
     if (ul.children.length > 7) {
@@ -367,6 +378,9 @@ function updateMargin(ul) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  Map score (for player score update).
+//------------------------------------------------------------------------------
 function mapCardScore(color, value) {
     if (color == "Black") {
         return 50;
@@ -379,6 +393,12 @@ function mapCardScore(color, value) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  If the card to be played is a black one:
+//  1) Check if +4 and if allowed
+//  2) Check if color change possible (not possible if top card is a black one)
+//  If it is not a black card, it is being compared to the topcard.
+//------------------------------------------------------------------------------
 function checkCard(card) {
     let currPlayer = players.find(function(e) {
         return e.Name == playerTurn.Name;
@@ -410,12 +430,19 @@ function checkCard(card) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  If the card check went well, remove the card from the array of cards of the
+//  corresponding player.
+//------------------------------------------------------------------------------
 function removeCardFromArr(index) {
     players.find(function(e) {
         return e.Name == playerTurn.Name;
     }).Cards.splice(index, 1);
 }
 
+//------------------------------------------------------------------------------
+//  Create a card according to the color wish.
+//------------------------------------------------------------------------------
 function processColorWish(colorWish, cardValue) {
     let color;
     switch (colorWish.toUpperCase) {
@@ -435,9 +462,12 @@ function processColorWish(colorWish, cardValue) {
             color = colorWish;
     }
 
-    return new Card(color, "", cardValue, 0);
+    return new Card(colorWish, "", cardValue, 0);
 }
 
+//------------------------------------------------------------------------------
+//  Show modal color picker and remember color wish.
+//------------------------------------------------------------------------------
 function checkColor(card, player, color) {
     if (color == "choose") {
         let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
@@ -461,24 +491,43 @@ function checkColor(card, player, color) {
     }
 }
 
-async function getColor() {
-    let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
-    modal.show();
-    colorPickerForm = document.getElementById("colorPickerForm");
-    colorPickerForm.addEventListener("click", function(e) {
-        e.preventDefault;
-        if (e.target.id == "red") {
-            colorWish = "Red";
-        } else if (e.target.id == "blue") {
-            colorWish = "Blue";
-        } else if (e.target.id == "green") {
-            colorWish = "Green";
-        } else if (e.target.id == "yellow") {
-            colorWish = "Yellow";
-        }
+//------------------------------------------------------------------------------
+//  End of game. Start firework animation (see source in css file). Sum up
+//  all points for the winner. Show modal with winner and points.
+//  Reload page on button click to start again.
+//------------------------------------------------------------------------------
+function endOfGame(result) {
+    startFirework();
+    let loosers = players.filter(function(e) {
+        return e.Name != result.Player;
     });
-    modal.hide();
-    return colorWish;
+    let points = 0;
+    for (let i = 0; i < loosers.length; i++) {
+        points += loosers[i].Score;
+    }
+    document.getElementById("winnerMessage").firstChild.textContent = "Player " + playerTurn.Name + " won with " + points + " points.";
+
+    let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
+    modal.show();
+    document.getElementById("playAgain").addEventListener("click", function(e) {
+        window.location.reload();
+        modal.hide();
+    });
+}
+
+//------------------------------------------------------------------------------
+//  Get the corresponding html element, make it visible and add a class with
+//  an animation.
+//  Reverse it all to be able to use UNO again if necessary.
+//------------------------------------------------------------------------------
+function uno() {
+    const unoMessage = document.getElementById("uno");
+    unoMessage.classList.remove('hiddenElement');
+    unoMessage.classList.add('shoutUno');
+    setTimeout(function(e) {
+        unoMessage.classList.add('hiddenElement');
+        unoMessage.classList.remove('shoutUno');
+    });
 }
 
 async function playCard(card, player, color) {
@@ -489,29 +538,11 @@ async function playCard(card, player, color) {
         let result = await response.json();
 
         if (playerTurn.Name == result.Player) {
-            startFirework();
-            let loosers = players.filter(function(e) {
-                return e.Name != result.Player;
-            });
-            let points = 0;
-            for (let i = 0; i < loosers.length; i++) {
-                points += loosers[i].Score;
-            }
-            document.getElementById("winnerMessage").firstChild.textContent = "Player " + playerTurn.Name + " won with " + points + " points.";
-
-            let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
-            modal.show();
-            document.getElementById("playAgain").addEventListener("click", function(e) {
-                window.location.reload();
-                modal.hide();
-            });
-
+            endOfGame(result);
         }
 
         if (playerTurn.Cards.length == 1) {
-            const unoMessage = document.getElementById("uno");
-            unoMessage.classList.remove('hiddenElement');
-            unoMessage.classList.add('shoutUno');
+            uno();
         }
 
         playerTurn = players.find(function(e) {

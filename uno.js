@@ -92,7 +92,10 @@ function checkName(e) {
 
 //------------------------------------------------------------------------------
 //  Submit names (on button click)
-//  Save all names
+//  Check again for duplicates before submiting
+//  If no duplicates and no empty names - save names, hide modal and start the
+//  game. 
+//  Otherwise shake animation.
 //------------------------------------------------------------------------------
 function submitNames(e) {
     e.preventDefault();
@@ -124,11 +127,20 @@ function submitNames(e) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  Start game calls the load method and after retreiving its response the 
+//  playGame method.
+//------------------------------------------------------------------------------
 async function startGame() {
     let response = await load();
     playGame(response);
 }
 
+//------------------------------------------------------------------------------
+//  Load fetches data from the server. If the response from the server is OK,
+//  the game may start. 
+//  Otherwise a modal with the corresponding error message is shown.
+//------------------------------------------------------------------------------
 async function load() {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
         method: 'POST',
@@ -153,6 +165,12 @@ async function load() {
     }
 }
 
+//------------------------------------------------------------------------------
+//  The greet function retrieves the Welcome Element, toggles the hidden
+//  property and starts the greeting animation. 
+//  This is also the place where the whole game desk is being shown and
+//  floated in via an animation.
+//------------------------------------------------------------------------------
 function greet() {
     const welcomeMessage = document.getElementById("welcome");
     welcomeMessage.classList.toggle('hiddenElement');
@@ -166,6 +184,14 @@ function greet() {
     }, 3000);
 }
 
+//------------------------------------------------------------------------------
+//  The play game is the initial method after getting first response from the
+//  server. 
+//  The appropriate players are created and set. 
+//  Their cards are mapped.
+//  Current player and top card are being saved and methods to show both are
+//  invoked.
+//------------------------------------------------------------------------------
 function playGame(result) {
     playId = result.Id;
 
@@ -196,6 +222,11 @@ function playGame(result) {
     displayCurrentPlayer(playerTurn);
 }
 
+//------------------------------------------------------------------------------
+//  Funciton to get the corresponding div and bringing it up for the 
+//  current player. All other players shall stay hidden (or with less
+//  opacity in our case).
+//------------------------------------------------------------------------------
 function displayCurrentPlayer(currentPlayer) {
     const div = document.getElementById("current").firstElementChild;
     div.textContent = currentPlayer.Name.toUpperCase();

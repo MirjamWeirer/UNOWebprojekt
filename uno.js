@@ -330,7 +330,7 @@ function checkCard(card) {
                 modal.hide();
             });
             //colorWish = topCard.Color;
-            return false;
+            return true;
         } else {
             // colorWish = prompt("Welche Farbe?")
             colorWish = "choose";
@@ -489,8 +489,8 @@ async function playCard(card, player, color) {
 
         if (playerTurn.Cards.length == 1) {
             const unoMessage = document.getElementById("uno");
-            unoMessage.classList.toggle('hiddenElement');
-            unoMessage.classList.toggle('shoutUno');
+            unoMessage.classList.remove('hiddenElement');
+            unoMessage.classList.add('shoutUno');
         }
 
         playerTurn = players.find(function(e) {

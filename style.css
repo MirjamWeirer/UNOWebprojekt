@@ -214,7 +214,7 @@ body {
     left: 50%;
     margin-left: -200px;
     color: #e751ec;
-    animation: greet 3s ease-in-out forwards;
+    animation: shout 3s ease-in-out forwards;
 }
 
 .start {

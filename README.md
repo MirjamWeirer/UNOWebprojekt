@@ -14,6 +14,8 @@ Das ist unser super tolles Uno Projekt.
 - export/import functions (https://stackoverflow.com/questions/3809862/can-we-call-the-function-written-in-one-javascript-in-another-js-file)
 - lösung für mehr karten finden
 
+- CSS3 Media Query, Bootstrap Responsive Classes to scale web page according to screen resolution
+
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:
  - [x] Spieler*innennamen eingeben (nur unterschiedliche)

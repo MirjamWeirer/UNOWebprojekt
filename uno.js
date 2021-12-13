@@ -175,7 +175,7 @@ function showTopCard(topCard) {
         img = document.createElement("img");
         pile.appendChild(img);
     }
-    img.classList.add("rotate-diagonal-tl");
+    // img.classList.add("rotate-diagonal-tl");
     img.src = `images/${topCard.Color}_${topCard.Value}.png`;
     // img.classList.remove("rotate-diagonal-tl");
 

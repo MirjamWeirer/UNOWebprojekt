@@ -175,8 +175,10 @@ function showTopCard(topCard) {
         img = document.createElement("img");
         pile.appendChild(img);
     }
-
+    img.classList.add("rotate-diagonal-tl");
     img.src = `images/${topCard.Color}_${topCard.Value}.png`;
+    img.classList.remove("rotate-diagonal-tl");
+
 }
 
 function mapCards(player) {
@@ -232,10 +234,13 @@ function addListeners(ul) {
 
 async function getCardToPlay(e) {
     console.log("getCardToPlay");
+    e.target.classList.add("rotate-diagonal-tl");
     let arr = e.target.src.split("/");
     const card = arr[arr.length - 1].split(".")[0].split("_");
     const cardScore = mapCardScore(card[0], card[1]);
     const cardToPlay = new Card(card[0], "", card[1], cardScore);
+    e.target.classList.remove("rotate-diagonal-tl");
+
 
     let clicked = e.target.closest('li');
     let parentUl = Array.from(e.target.parentNode.parentNode.children);

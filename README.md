@@ -16,6 +16,7 @@ Das ist unser super tolles Uno Projekt.
 
 - CSS3 Media Query, Bootstrap Responsive Classes to scale web page according to screen resolution
 - Eingabe der Namen anpassen - zur Zeit sind Namen mit gleichem Beginn nicht erlaubt
+- laut ppt: Alle Karten Aktionen müssen animiert sein (!)
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:

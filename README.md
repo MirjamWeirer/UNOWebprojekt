@@ -15,6 +15,7 @@ Das ist unser super tolles Uno Projekt.
 - lösung für mehr karten finden
 
 - CSS3 Media Query, Bootstrap Responsive Classes to scale web page according to screen resolution
+- Eingabe der Namen anpassen - zur Zeit sind Namen mit gleichem Beginn nicht erlaubt
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:

@@ -177,7 +177,7 @@ function showTopCard(topCard) {
     }
     img.classList.add("rotate-diagonal-tl");
     img.src = `images/${topCard.Color}_${topCard.Value}.png`;
-    img.classList.remove("rotate-diagonal-tl");
+    // img.classList.remove("rotate-diagonal-tl");
 
 }
 
@@ -234,7 +234,6 @@ function addListeners(ul) {
 
 async function getCardToPlay(e) {
     console.log("getCardToPlay");
-    e.target.classList.add("rotate-diagonal-tl");
     let arr = e.target.src.split("/");
     const card = arr[arr.length - 1].split(".")[0].split("_");
     const cardScore = mapCardScore(card[0], card[1]);
@@ -249,6 +248,7 @@ async function getCardToPlay(e) {
     if (e.currentTarget.parentNode.firstElementChild.id != playerTurn.Name) {
         e.preventDefault;
         // animation?
+
         console.log("not your turn");
         const body = document.body;
         body.classList.add("box-shadow");
@@ -258,7 +258,12 @@ async function getCardToPlay(e) {
     } else {
         if (checkCard(cardToPlay) == true) {
             console.log(playerTurn);
-            e.currentTarget.removeChild(e.target.parentNode);
+            e.target.classList.add("rotate-diagonal-tl");
+            setTimeout(function() {
+                e.target.remove(e.target.parentNode);
+                e.target.classList.remove("shakrotate-diagonal-tleIt");
+            }, 1000);
+            //e.currentTarget.removeChild(e.target.parentNode);
             removeCardFromArr(indexOfClicked);
             updateMargin(e.currentTarget);
             checkColor(cardToPlay, playerTurn, colorWish);

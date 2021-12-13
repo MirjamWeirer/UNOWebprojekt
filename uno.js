@@ -243,6 +243,9 @@ function displayCurrentPlayer(currentPlayer) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  Create img if not there, otherwise just change its source.
+//------------------------------------------------------------------------------
 function showTopCard(topCard) {
     let img;
 
@@ -255,6 +258,11 @@ function showTopCard(topCard) {
     img.src = `images/${topCard.Color}_${topCard.Value}.png`;
 }
 
+//------------------------------------------------------------------------------
+//  Multipurpose function...
+//  This function creates divs for the player info (name and points) and an ul
+//  where the player cards are mapped as list elements.
+//------------------------------------------------------------------------------
 function mapCards(player) {
     const div = document.createElement("div");
     div.classList.add("playerDivs");
@@ -288,6 +296,10 @@ function mapCards(player) {
     })
 }
 
+//------------------------------------------------------------------------------
+//  Function to add all needed eventListeners to an element (ul).
+//  Mousover and out for the cards scaling and click for the chosen card.
+//------------------------------------------------------------------------------
 function addListeners(ul) {
     ul.addEventListener("mouseover", function(e) {
         if (e.target != e.currentTarget) {

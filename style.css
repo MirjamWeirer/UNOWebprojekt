@@ -13,6 +13,53 @@ body {
     transform: scale(0.5);
 }
 
+.redBorder {
+    background: linear-gradient(to left, white, red);
+	background-size: 400% 400%;
+	animation: gradient 7s ease infinite;
+}
+
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes animateBg {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
+  }
+
+.redBox {
+    border-style: inset;;
+    animation: border 2s linear infinite;
+}
+
+@keyframes border {
+    0% {
+        border: solid 0px red;
+    }
+    50% {
+        border: solid 3px red;
+
+    }
+    100% {
+        border: solid 0px red;
+
+    }
+}
+
 .box-shadow {
     animation: boxShadow 1s;
 }

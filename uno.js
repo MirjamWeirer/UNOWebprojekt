@@ -2,8 +2,34 @@ let modal = new bootstrap.Modal(document.getElementById("playerName"));
 modal.show();
 
 playerNamesForm = document.getElementById("playerNamesForm");
-playerNamesForm.addEventListener("keyup", checkName);
+// playerNamesForm.addEventListener("keyup", checkName);
+playerNamesForm.addEventListener("focusout", checkName2);
 playerNamesForm.addEventListener("submit", submitNames);
+
+function checkName2(e) {
+    let namesArray = [];
+    for (let i = 0; i < playerForm.length; i++) {
+        if (playerForm[i].id != e.target.id) {
+            console.log("pushing elements");
+            namesArray.push(playerForm[i].value);
+        }
+    }
+
+    if (namesArray.includes(e.target.value)) {
+        console.log("contains");
+        e.target.classList.add("redBorder")
+    } else {
+        e.target.classList.remove("redBorder");
+    }
+
+    let duplicates = namesArray.filter((el, it) => namesArray.indexOf(el) != it);
+    if (duplicates.length == 0 && !e.target.classList.contains("redBorder")) {
+        for (let i = 0; i < playerForm.length; i++) {
+            playerForm[i].classList.remove("redBorder");
+        }
+    }
+    console.log(duplicates);
+}
 
 function checkName() {
     if (player1.value == player2.value) {

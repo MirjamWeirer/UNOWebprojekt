@@ -18,6 +18,12 @@ let player2 = document.getElementById("player2");
 let player3 = document.getElementById("player3");
 let player4 = document.getElementById("player4");
 
+let playerForm = [];
+playerForm.push(player1);
+playerForm.push(player2);
+playerForm.push(player3);
+playerForm.push(player4);
+
 let playerNames = [];
 let playerDivs = [];
 

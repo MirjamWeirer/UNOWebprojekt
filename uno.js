@@ -59,11 +59,14 @@ let topCard;
 let proceed = false;
 
 //------------------------------------------------------------------------------
-//  Get the input form for the player names and add event listeners
+//  Get the input form for the player names and draw piles and add event 
+//  listeners
 //------------------------------------------------------------------------------
 playerNamesForm = document.getElementById("playerNamesForm");
 playerNamesForm.addEventListener("focusout", checkName);
 playerNamesForm.addEventListener("submit", submitNames);
+
+document.getElementById("ziehen").addEventListener("click", ziehen);
 
 //------------------------------------------------------------------------------
 //  Check names for duplicates (on focusout)
@@ -530,6 +533,9 @@ function uno() {
     });
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 async function playCard(card, player, color) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
         method: 'PUT'
@@ -588,6 +594,9 @@ async function playCard(card, player, color) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 async function updateCards() {
     let indexCurr = players.indexOf(players.find(function(e) {
         return e.Name == playerTurn.Name;
@@ -613,6 +622,9 @@ async function updateCards() {
     }
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function updateCardsAfterDraw(player) {
     let list = playerDivs.find(function(e) {
         return e.id == player.Name;
@@ -641,12 +653,18 @@ function updateCardsAfterDraw(player) {
     }
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function updateScoreAfterDraw(player) {
     playerDivs.find(function(e) {
         return e.id == player.Name;
     }).lastElementChild.textContent = "Points: " + player.Score;
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function updateScoreAfterPlay(score) {
     let indexCurr = players.indexOf(players.find(function(e) {
         return e.Name == playerTurn.Name;
@@ -665,6 +683,9 @@ function updateScoreAfterPlay(score) {
     }).lastElementChild.textContent = "Points: " + players[index].Score;
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function checkOverflow(index) {
     if (index < 0) {
         index = players.length - 1;
@@ -675,9 +696,9 @@ function checkOverflow(index) {
     return index;
 }
 
-document.getElementById("ziehen").addEventListener("click", ziehen);
-
-// Game/DrawCard/{id}
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 async function ziehen() {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/DrawCard/" + playId, {
         method: 'PUT'
@@ -705,14 +726,19 @@ async function ziehen() {
         });
         document.getElementById("desk").classList.toggle('hiddenElement');
     }
-    //return result.Player;
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function updatePlayerAfterDraw(player, card) {
     player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
     player.Score += card.Score;
 }
 
+//------------------------------------------------------------------------------
+//  
+//------------------------------------------------------------------------------
 function startFirework() {
     const firework = document.createElement("div");
     const before = document.createElement("div");

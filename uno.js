@@ -1,22 +1,82 @@
+//------------------------------------------------------------------------------
+//  Initial modal for names input
+//------------------------------------------------------------------------------
 let modal = new bootstrap.Modal(document.getElementById("playerName"));
 modal.show();
 
+//------------------------------------------------------------------------------
+//  Constructor for card creation
+//------------------------------------------------------------------------------
+function Card(color, text, value, score) {
+    this.Color = color;
+    this.Text = text;
+    this.Value = value;
+    this.Score = score;
+}
+
+//------------------------------------------------------------------------------
+//  Constructor for player creation
+//------------------------------------------------------------------------------
+function Player(name, cards = [], score = -1) {
+    this.Name = name;
+    this.Cards = cards;
+    this.Score = score;
+}
+
+//------------------------------------------------------------------------------
+//  Id of the game (needed for the communication with the server)
+//------------------------------------------------------------------------------
+let playId;
+
+//------------------------------------------------------------------------------
+//  Some additional helper variables
+//------------------------------------------------------------------------------
+let player1 = document.getElementById("player1");
+let player2 = document.getElementById("player2");
+let player3 = document.getElementById("player3");
+let player4 = document.getElementById("player4");
+
+let playerForm = [];
+playerForm.push(player1);
+playerForm.push(player2);
+playerForm.push(player3);
+playerForm.push(player4);
+
+let playerNames = [];
+let playerDivs = [];
+
+let pile = document.getElementById("ablegen");
+
+let reverse = 1;
+let colorWish;
+
+/* Response data */
+let playerNamesForm;
+let playerTurn;
+let players = [];
+let topCard;
+
+let proceed = false;
+
+//------------------------------------------------------------------------------
+//  Get the input form for the player names and add event listeners
+//------------------------------------------------------------------------------
 playerNamesForm = document.getElementById("playerNamesForm");
-// playerNamesForm.addEventListener("keyup", checkName);
-playerNamesForm.addEventListener("focusout", checkName2);
+playerNamesForm.addEventListener("focusout", checkName);
 playerNamesForm.addEventListener("submit", submitNames);
 
-function checkName2(e) {
+//------------------------------------------------------------------------------
+//  Check names for duplicates (on focusout)
+//------------------------------------------------------------------------------
+function checkName(e) {
     let namesArray = [];
     for (let i = 0; i < playerForm.length; i++) {
         if (playerForm[i].id != e.target.id) {
-            console.log("pushing elements");
             namesArray.push(playerForm[i].value);
         }
     }
 
     if (namesArray.includes(e.target.value)) {
-        console.log("contains");
         e.target.classList.add("redBorder")
     } else {
         e.target.classList.remove("redBorder");
@@ -28,27 +88,27 @@ function checkName2(e) {
             playerForm[i].classList.remove("redBorder");
         }
     }
-    console.log(duplicates);
 }
 
-function checkName() {
-    if (player1.value == player2.value) {
-        player2.value = "";
-    } else if (player1.value == player3.value ||
-        player2.value == player3.value) {
-        player3.value = "";
-    } else if (player1.value == player4.value ||
-        player2.value == player4.value ||
-        player3.value == player4.value) {
-        player4.value = "";
-    }
-}
-
+//------------------------------------------------------------------------------
+//  Submit names (on button click)
+//  Save all names
+//------------------------------------------------------------------------------
 function submitNames(e) {
     e.preventDefault();
     e.target.classList.remove("shakeIt")
 
-    if (player1.value != "" && player2.value != "" && player3.value != "" && player4.value != "") {
+    let namesArray = [];
+    for (let i = 0; i < playerForm.length; i++) {
+        namesArray.push(playerForm[i].value);
+    }
+
+    let duplicates = namesArray.filter((el, it) => namesArray.indexOf(el) != it);
+    if (duplicates.length == 0) {
+        proceed = true;
+    }
+
+    if (proceed && player1.value != "" && player2.value != "" && player3.value != "" && player4.value != "") {
         playerNames.push(player1.value);
         playerNames.push(player2.value);
         playerNames.push(player3.value);
@@ -65,14 +125,11 @@ function submitNames(e) {
 }
 
 async function startGame() {
-    console.log("startGame");
     let response = await load();
-    console.log(response);
     playGame(response);
 }
 
 async function load() {
-    console.log("load");
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
         method: 'POST',
         body: JSON.stringify(playerNames),
@@ -97,13 +154,11 @@ async function load() {
 }
 
 function greet() {
-    console.log("greet");
     const welcomeMessage = document.getElementById("welcome");
     welcomeMessage.classList.toggle('hiddenElement');
     welcomeMessage.classList.toggle('greeting');
 
     const desk = document.getElementById("desk");
-
 
     setTimeout(function() {
         desk.classList.toggle('hiddenElement');
@@ -112,9 +167,7 @@ function greet() {
 }
 
 function playGame(result) {
-    console.log("playGame");
     playId = result.Id;
-
 
     for (let i = 0; i < result.Players.length; i++) {
         let player = result.Players[i];
@@ -125,12 +178,8 @@ function playGame(result) {
     playerTurn = players.find(function(e) {
         return e.Name == result.NextPlayer;
     })
-    console.log(result.NextPlayer);
-
 
     topCard = new Card(result.TopCard.Color, result.TopCard.Text, result.TopCard.Value, result.TopCard.Score);
-
-
 
     if (topCard.Value == 10) {
         let index = players.indexOf(players.find(function(e) {
@@ -148,8 +197,6 @@ function playGame(result) {
 }
 
 function displayCurrentPlayer(currentPlayer) {
-    console.log("displayCurrentPlayer");
-    console.log(currentPlayer);
     const div = document.getElementById("current").firstElementChild;
     div.textContent = currentPlayer.Name.toUpperCase();
 
@@ -166,7 +213,6 @@ function displayCurrentPlayer(currentPlayer) {
 }
 
 function showTopCard(topCard) {
-    console.log("showTopCard");
     let img;
 
     if (pile.firstElementChild) {
@@ -175,14 +221,10 @@ function showTopCard(topCard) {
         img = document.createElement("img");
         pile.appendChild(img);
     }
-    // img.classList.add("rotate-diagonal-tl");
     img.src = `images/${topCard.Color}_${topCard.Value}.png`;
-    // img.classList.remove("rotate-diagonal-tl");
-
 }
 
 function mapCards(player) {
-    console.log("mapCards");
     const div = document.createElement("div");
     div.classList.add("playerDivs");
 
@@ -216,7 +258,6 @@ function mapCards(player) {
 }
 
 function addListeners(ul) {
-    console.log("addListeners");
     ul.addEventListener("mouseover", function(e) {
         if (e.target != e.currentTarget) {
             e.target.classList.toggle("mouseOver");
@@ -233,13 +274,11 @@ function addListeners(ul) {
 }
 
 async function getCardToPlay(e) {
-    console.log("getCardToPlay");
     let arr = e.target.src.split("/");
     const card = arr[arr.length - 1].split(".")[0].split("_");
     const cardScore = mapCardScore(card[0], card[1]);
     const cardToPlay = new Card(card[0], "", card[1], cardScore);
     e.target.classList.remove("rotate-diagonal-tl");
-
 
     let clicked = e.target.closest('li');
     let parentUl = Array.from(e.target.parentNode.parentNode.children);
@@ -247,9 +286,7 @@ async function getCardToPlay(e) {
 
     if (e.currentTarget.parentNode.firstElementChild.id != playerTurn.Name) {
         e.preventDefault;
-        // animation?
 
-        console.log("not your turn");
         const body = document.body;
         body.classList.add("box-shadow");
         setTimeout(function() {
@@ -257,19 +294,16 @@ async function getCardToPlay(e) {
         }, 1000);
     } else {
         if (checkCard(cardToPlay) == true) {
-            console.log(playerTurn);
             e.target.classList.add("rotate-diagonal-tl");
             setTimeout(function() {
                 e.target.remove(e.target.parentNode);
                 e.target.classList.remove("shakrotate-diagonal-tleIt");
             }, 1000);
-            //e.currentTarget.removeChild(e.target.parentNode);
             removeCardFromArr(indexOfClicked);
             updateMargin(e.currentTarget);
             checkColor(cardToPlay, playerTurn, colorWish);
 
         } else {
-            console.log("in false");
             e.target.parentNode.classList.add("shakeIt");
             setTimeout(function() {
                 e.target.parentNode.classList.remove("shakeIt");
@@ -282,12 +316,8 @@ function updateMargin(ul) {
     let margin = 3;
     if (ul.children.length > 7) {
         let temp = ul.children.length * 85 - 700;
-        console.log(temp);
         margin = (temp / playerTurn.Cards.length + 1) * (-1);
     }
-
-    console.log(margin);
-
 
     for (let i = 0; i < ul.children.length; i++) {
         ul.children[i].style.marginRight = `${margin}px`;
@@ -295,7 +325,6 @@ function updateMargin(ul) {
 }
 
 function mapCardScore(color, value) {
-    console.log("mapCardScore");
     if (color == "Black") {
         return 50;
     } else {
@@ -308,18 +337,14 @@ function mapCardScore(color, value) {
 }
 
 function checkCard(card) {
-    console.log("checkCard");
     let currPlayer = players.find(function(e) {
         return e.Name == playerTurn.Name;
     })
-    console.log(card);
-    console.log(topCard);
     if (card.Color == "Black") {
         let foundCard = currPlayer.Cards.find(function(e) {
             return e.Color == topCard.Color;
         })
         if (card.Value == 13 && typeof(foundCard) !== 'undefined') {
-            console.log("+4 not allowed");
             return false;
         }
         if (topCard.Value >= 13 && card.Value >= 13) {
@@ -329,25 +354,20 @@ function checkCard(card) {
             document.getElementById("close").addEventListener("click", function(e) {
                 modal.hide();
             });
-            //colorWish = topCard.Color;
             return true;
         } else {
-            // colorWish = prompt("Welche Farbe?")
             colorWish = "choose";
         }
         return true;
     } else if (topCard.Color == card.Color || topCard.Value == card.Value) {
-        console.log("in true");
         colorWish = "";
         return true;
     } else {
-        console.log("false");
         return false;
     }
 }
 
 function removeCardFromArr(index) {
-    console.log("removeCardFromArr");
     players.find(function(e) {
         return e.Name == playerTurn.Name;
     }).Cards.splice(index, 1);
@@ -383,16 +403,12 @@ function checkColor(card, player, color) {
             e.preventDefault;
             if (e.target.id == "red") {
                 colorWish = "Red";
-                console.log(colorWish);
             } else if (e.target.id == "blue") {
                 colorWish = "Blue";
-                console.log(colorWish);
             } else if (e.target.id == "green") {
                 colorWish = "Green";
-                console.log(colorWish);
             } else if (e.target.id == "yellow") {
                 colorWish = "Yellow";
-                console.log(colorWish);
             }
             playCard(card, player, colorWish);
             modal.hide();
@@ -405,76 +421,39 @@ function checkColor(card, player, color) {
 async function getColor() {
     let modal = new bootstrap.Modal(document.getElementById("colorPicker"));
     modal.show();
-    console.log("colorWish" + colorWish);
     colorPickerForm = document.getElementById("colorPickerForm");
     colorPickerForm.addEventListener("click", function(e) {
         e.preventDefault;
         if (e.target.id == "red") {
             colorWish = "Red";
-            console.log(colorWish);
         } else if (e.target.id == "blue") {
             colorWish = "Blue";
-            console.log(colorWish);
         } else if (e.target.id == "green") {
             colorWish = "Green";
-            console.log(colorWish);
         } else if (e.target.id == "yellow") {
             colorWish = "Yellow";
-            console.log(colorWish);
         }
     });
     modal.hide();
-    console.log("colorWish" + colorWish);
-    console.log("test2");
     return colorWish;
 }
 
-function getColorWish() {
-    return new Promise((resolve, reject) => {
-        let tempModal = document.getElementById("colorPickerForm");
-        let redBtn = document.getElementById("red");
-        redBtn.addEventListener("click", function(e) {
-            console.log("in red btn")
-            resolve("R");
-        })
-    });
-}
-
-function colorPicked(e) {
-    console.log("colorPicked");
-    console.log(e);
-    console.log(e.target);
-    console.log(e.currentTarget);
-    if (e.target.classList.contains("btn-red")) {
-        console.log("red");
-        colorWish = "R";
-
-    }
-}
-
 async function playCard(card, player, color) {
-    console.log("playCard");
-    console.log(player);
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
         method: 'PUT'
     });
-    console.log(response);
     if (response.ok) {
         let result = await response.json();
-
-        console.log(result);
 
         if (playerTurn.Name == result.Player) {
             startFirework();
             let loosers = players.filter(function(e) {
                 return e.Name != result.Player;
             });
-            console.log(loosers);
             let points = 0;
             for (let i = 0; i < loosers.length; i++) {
                 points += loosers[i].Score;
             }
-            console.log("Points: " + points);
             document.getElementById("winnerMessage").firstChild.textContent = "Player " + playerTurn.Name + " won with " + points + " points.";
 
             let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
@@ -484,7 +463,6 @@ async function playCard(card, player, color) {
                 modal.hide();
             });
 
-            console.log("end of game");
         }
 
         if (playerTurn.Cards.length == 1) {
@@ -496,7 +474,6 @@ async function playCard(card, player, color) {
         playerTurn = players.find(function(e) {
             return e.Name == result.Player;
         });
-        console.log(playerTurn);
         displayCurrentPlayer(playerTurn);
 
         if (card.Value > 12) {
@@ -511,12 +488,6 @@ async function playCard(card, player, color) {
             reverse *= -1;
         }
 
-        console.log("---");
-        console.log(player);
-        console.log(players.indexOf(players.find(function(e) {
-            return e.Name == playerTurn.Name;
-        })))
-
         let index = players.indexOf(players.find(function(e) {
             return e.Name == playerTurn.Name;
         })) - reverse;
@@ -527,13 +498,8 @@ async function playCard(card, player, color) {
         if (index > players.length - 1) {
             index = 0;
         }
-        console.log(index);
-        console.log(reverse);
-        console.log(players[index]);
 
         updateScoreAfterPlay(card.Score);
-
-
 
         if (card.Value == 13 || card.Value == 10) {
             updateCards();
@@ -549,7 +515,6 @@ async function playCard(card, player, color) {
 }
 
 async function updateCards() {
-    console.log("updateCards");
     let indexCurr = players.indexOf(players.find(function(e) {
         return e.Name == playerTurn.Name;
     }));
@@ -575,24 +540,15 @@ async function updateCards() {
 }
 
 function updateCardsAfterDraw(player) {
-    console.log("updateCardsAfterDraw");
     let list = playerDivs.find(function(e) {
         return e.id == player.Name;
     }).parentNode.lastElementChild;
-
-    console.log(list.firstChild);
-    console.log(list.firstChild.offsetWidth);
 
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
 
-    console.log(player.Cards);
     let margin = 0;
-
-    console.log(playerDivs[0]);
-    console.log(playerDivs[0].offsetWidth);
-
 
     if (player.Cards.length > 7) {
         let temp = player.Cards.length * 85 - 700;
@@ -612,14 +568,12 @@ function updateCardsAfterDraw(player) {
 }
 
 function updateScoreAfterDraw(player) {
-    console.log("updateScoreAfterDraw");
     playerDivs.find(function(e) {
         return e.id == player.Name;
     }).lastElementChild.textContent = "Points: " + player.Score;
 }
 
 function updateScoreAfterPlay(score) {
-    console.log("updateScoreAfterPlay");
     let indexCurr = players.indexOf(players.find(function(e) {
         return e.Name == playerTurn.Name;
     }));
@@ -630,11 +584,7 @@ function updateScoreAfterPlay(score) {
         index = index - reverse;
         index = checkOverflow(index);
     }
-    console.log(playerTurn);
     players[index].Score -= score;
-
-    console.log(players[index]);
-
 
     playerDivs.find(function(e) {
         return e.id == players[index].Name;
@@ -661,8 +611,6 @@ async function ziehen() {
 
     if (response.ok) {
         let result = await response.json();
-        console.log("ziehen")
-        console.log(result);
         let tempPlayer = players.find(function(e) {
             return e.Name == result.Player;
         });
@@ -687,7 +635,6 @@ async function ziehen() {
 }
 
 function updatePlayerAfterDraw(player, card) {
-    console.log("updatePlayerAfterDraw");
     player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
     player.Score += card.Score;
 }

@@ -12,6 +12,11 @@ Das ist unser super tolles Uno Projekt.
 - für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa) -coole idee
 - karte nach farbwunsch liegt nicht am richtigen platz
 - export/import functions (https://stackoverflow.com/questions/3809862/can-we-call-the-function-written-in-one-javascript-in-another-js-file)
+- lösung für mehr karten finden
+
+- CSS3 Media Query, Bootstrap Responsive Classes to scale web page according to screen resolution
+- Eingabe der Namen anpassen - zur Zeit sind Namen mit gleichem Beginn nicht erlaubt
+- laut ppt: Alle Karten Aktionen müssen animiert sein (!)
 
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:

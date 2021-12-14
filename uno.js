@@ -59,7 +59,7 @@ let topCard;
 let proceed = false;
 
 //------------------------------------------------------------------------------
-//  Get the input form for the player names and draw piles and add event 
+//  Get the input form for the player names and draw piles and add event
 //  listeners
 //------------------------------------------------------------------------------
 playerNamesForm = document.getElementById("playerNamesForm");
@@ -97,7 +97,7 @@ function checkName(e) {
 //  Submit names (on button click)
 //  Check again for duplicates before submiting
 //  If no duplicates and no empty names - save names, hide modal and start the
-//  game. 
+//  game.
 //  Otherwise shake animation.
 //------------------------------------------------------------------------------
 function submitNames(e) {
@@ -131,7 +131,7 @@ function submitNames(e) {
 }
 
 //------------------------------------------------------------------------------
-//  Start game calls the load method and after retreiving its response the 
+//  Start game calls the load method and after retreiving its response the
 //  playGame method.
 //------------------------------------------------------------------------------
 async function startGame() {
@@ -141,7 +141,7 @@ async function startGame() {
 
 //------------------------------------------------------------------------------
 //  Load fetches data from the server. If the response from the server is OK,
-//  the game may start. 
+//  the game may start.
 //  Otherwise a modal with the corresponding error message is shown.
 //------------------------------------------------------------------------------
 async function load() {
@@ -170,7 +170,7 @@ async function load() {
 
 //------------------------------------------------------------------------------
 //  The greet function retrieves the Welcome Element, toggles the hidden
-//  property and starts the greeting animation. 
+//  property and starts the greeting animation.
 //  This is also the place where the whole game desk is being shown and
 //  floated in via an animation.
 //------------------------------------------------------------------------------
@@ -189,8 +189,8 @@ function greet() {
 
 //------------------------------------------------------------------------------
 //  The play game is the initial method after getting first response from the
-//  server. 
-//  The appropriate players are created and set. 
+//  server.
+//  The appropriate players are created and set.
 //  Their cards are mapped.
 //  Current player and top card are being saved and methods to show both are
 //  invoked.
@@ -226,7 +226,7 @@ function playGame(result) {
 }
 
 //------------------------------------------------------------------------------
-//  Funciton to get the corresponding div and bringing it up for the 
+//  Funciton to get the corresponding div and bringing it up for the
 //  current player. All other players shall stay hidden (or with less
 //  opacity in our case).
 //------------------------------------------------------------------------------
@@ -534,7 +534,16 @@ function uno() {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  This function sends a card to be played to the server.
+//  If the next player from the result is the same as the player whose turn
+//  it was, then the next player from the result is the winner (he/she has
+//  no more cards).
+//  If the player who send the card has only 1 card left, shout uno.
+//  Otherwise checks as already known - set current player, display him/her,
+//  process top card (show colored "black" card if necessary), set reverse,
+//  update score after the turn and update whole player if the played card
+//  has been a +2 or +4.
+//  If the server response is not OK - show error modal.
 //------------------------------------------------------------------------------
 async function playCard(card, player, color) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/PlayCard/" + playId + "?value=" + card.Value + "&color=" + card.Color + "&wildColor=" + colorWish, {
@@ -595,7 +604,8 @@ async function playCard(card, player, color) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  If a player had to draw cards (because of a +2 or +4), we need to get
+//  his/her cards from the server and update them and the score.
 //------------------------------------------------------------------------------
 async function updateCards() {
     let indexCurr = players.indexOf(players.find(function(e) {
@@ -623,7 +633,10 @@ async function updateCards() {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  Since the cards are from the server not returned in the order they have
+//  been added (they are sorted by color, then by value), this function first
+//  deletes all cards and creates new ones with the actual cards array
+//  retrieved from the server via getCards.
 //------------------------------------------------------------------------------
 function updateCardsAfterDraw(player) {
     let list = playerDivs.find(function(e) {
@@ -654,7 +667,8 @@ function updateCardsAfterDraw(player) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  Find the div belonging to the player whose score should be updated and
+//  update its text content.
 //------------------------------------------------------------------------------
 function updateScoreAfterDraw(player) {
     playerDivs.find(function(e) {
@@ -663,7 +677,7 @@ function updateScoreAfterDraw(player) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  This function finds the last player and updates his score.
 //------------------------------------------------------------------------------
 function updateScoreAfterPlay(score) {
     let indexCurr = players.indexOf(players.find(function(e) {
@@ -684,7 +698,7 @@ function updateScoreAfterPlay(score) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  Helper function to check for an array index out of bound.
 //------------------------------------------------------------------------------
 function checkOverflow(index) {
     if (index < 0) {
@@ -697,7 +711,14 @@ function checkOverflow(index) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  The "ziehen" function is used in an event listener. It sends the
+//  corresponding message to the server and does following after retrieving
+//  the response:
+//  1) Update player after draw
+//  2) Update cards after draw
+//  3) Update score after draw
+//  4) Set and display current player
+//  The same as above happens if response not OK - show error modal.
 //------------------------------------------------------------------------------
 async function ziehen() {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/DrawCard/" + playId, {
@@ -729,7 +750,8 @@ async function ziehen() {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  Push the drawn card into players cards array and update his score (the
+//  member variable of the player object).
 //------------------------------------------------------------------------------
 function updatePlayerAfterDraw(player, card) {
     player.Cards.push(new Card(card.Color, card.Text, card.Value, card.Score));
@@ -737,7 +759,9 @@ function updatePlayerAfterDraw(player, card) {
 }
 
 //------------------------------------------------------------------------------
-//  
+//  Source of animation: see css fil
+//  This function creates needed elements for the final firework (when a winner
+//  is known and the game ends).
 //------------------------------------------------------------------------------
 function startFirework() {
     const firework = document.createElement("div");

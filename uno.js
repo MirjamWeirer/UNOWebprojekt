@@ -58,6 +58,8 @@ let topCard;
 
 let proceed = false;
 
+let target;
+
 //------------------------------------------------------------------------------
 //  Get the input form for the player names and draw piles and add event
 //  listeners
@@ -338,6 +340,8 @@ async function getCardToPlay(e) {
     let clicked = e.target.closest('li');
     let parentUl = Array.from(e.target.parentNode.parentNode.children);
     let indexOfClicked = parentUl.indexOf(clicked);
+    
+    target = e.currentTarget;
 
     if (e.currentTarget.parentNode.firstElementChild.id != playerTurn.Name) {
         e.preventDefault;
@@ -354,10 +358,7 @@ async function getCardToPlay(e) {
                 e.target.remove(e.target.parentNode);
                 // e.currentTarget.removeChild(e.target.parentNode);
                 console.log(e.target);
-                console.log(e.target.parentNode);
-                console.log(e.target.parentNode.parentNode);
-                console.log(e.target.parentNode.children);
-                console.log(e.target.parentNode.parentNode.children);
+                console.log(target);
                 e.target.classList.remove("shakrotate-diagonal-tleIt");
             }, 1000);
             removeCardFromArr(indexOfClicked);

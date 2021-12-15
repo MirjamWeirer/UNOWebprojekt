@@ -18,6 +18,9 @@ Das ist unser super tolles Uno Projekt.
 - Eingabe der Namen anpassen - zur Zeit sind Namen mit gleichem Beginn nicht erlaubt
 - laut ppt: Alle Karten Aktionen müssen animiert sein (!)
 
+
+- Firework source: https://codepen.io/hmaw/pen/qBEMLxV
+
 ## Roadmap to WEB || Uno
  - 11.11. Ziel:
  - [x] Spieler*innennamen eingeben (nur unterschiedliche)

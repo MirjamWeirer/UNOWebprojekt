@@ -32,16 +32,16 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <input id="player1" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 1" aria-label=".form-control-lg example" value="a">
+                                <input id="player1" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 1" aria-label=".form-control-lg example">
                             </div>
                             <div class="mb-3">
-                                <input id="player2" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 2" aria-label=".form-control-lg example" value="b">
+                                <input id="player2" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 2" aria-label=".form-control-lg example">
                             </div>
                             <div class="mb-3">
-                                <input id="player3" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 3" aria-label=".form-control-lg example" value="c">
+                                <input id="player3" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 3" aria-label=".form-control-lg example">
                             </div>
                             <div class="mb-3">
-                                <input id="player4" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 4" aria-label=".form-control-lg example" value="d">
+                                <input id="player4" class="form-control form-control-lg shadow-none" type="text" placeholder="Name Spieler*in 4" aria-label=".form-control-lg example">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -105,6 +105,25 @@
         </div>
 
         <!-- --------------------------------------------------------------- -->
+        <!-- Color Change Modal -->
+        <!-- --------------------------------------------------------------- -->
+        <div class="modal" tabindex="-1" role="dialog" id="colorChange">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Möchtest du die Farbe wechseln?</h5>
+                  </div>
+                  <div class="modal-body" id="colorChangeMessage">
+                    <p>Tut uns leid, aber hier kommt eine von den Serverabweichungen... Eine Farbwechsel-Karte gelegt auf eine andere Farbwechsel-Karte erlaubt leider keinen Farbwechsel! Die Farbe bleibt daher die selbe.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary shadow-none" id="closeColorChange" data-dismiss="modal">Close Window</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- --------------------------------------------------------------- -->
         <!-- End Game Modal -->
         <!-- --------------------------------------------------------------- -->
         <div class="modal" tabindex="-1" role="dialog" id="winnerModal">
@@ -136,7 +155,9 @@
                         <div class="ziehen-ablegen" id="ablegen">
                         </div>
                         <div class="ziehen-ablegen" id="ziehen">
-                            <img src="images/back0.png">
+                            <div class="draw" id="animatedDraw">
+                                <img src="images/back0.png">
+                            </div>
                         </div>
                     </div>
                     <div id="current">
@@ -146,6 +167,11 @@
                 <div class="col" id="playground">
                 </div>
             </div>
+        </div>
+
+        <div class="footer">
+            <p><a href="https://www.uno-kartenspiel.de/spielregeln/" target="_blank">UNO Spielregeln</a></p>
+            <p>Anklicken um die offiziellen UNO Regeln einzusehen. Bitte beachten, dass das Serververhalten leicht abweichend sein kann.</p>
         </div>
 
         <!-- --------------------------------------------------------------- -->

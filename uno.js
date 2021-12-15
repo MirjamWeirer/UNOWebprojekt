@@ -69,6 +69,7 @@ playerNamesForm = document.getElementById("playerNamesForm");
 playerNamesForm.addEventListener("focusout", checkName);
 playerNamesForm.addEventListener("submit", submitNames);
 
+let draw = document.getElementById("animatedDraw");
 document.getElementById("ziehen").addEventListener("click", ziehen);
 
 //------------------------------------------------------------------------------
@@ -82,8 +83,11 @@ function checkName(e) {
         }
     }
 
+    console.log(namesArray);
+
     if (namesArray.includes(e.target.value)) {
         e.target.classList.add("redBorder")
+        console.log(e.target.value);
     } else {
         e.target.classList.remove("redBorder");
     }
@@ -94,6 +98,8 @@ function checkName(e) {
             playerForm[i].classList.remove("redBorder");
         }
     }
+
+    document.getElementById("play").classList.remove("redBorder");
 }
 
 //------------------------------------------------------------------------------
@@ -422,10 +428,9 @@ function checkCard(card) {
             return false;
         }
         if (topCard.Value >= 13 && card.Value >= 13) {
-            document.getElementById("errorMessage").firstChild.textContent = "Color has to stay the same";
-            let modal = new bootstrap.Modal(document.getElementById("errorModal"));
+            let modal = new bootstrap.Modal(document.getElementById("colorChange"));
             modal.show();
-            document.getElementById("close").addEventListener("click", function(e) {
+            document.getElementById("closeColorChange").addEventListener("click", function(e) {
                 modal.hide();
             });
             return true;
@@ -559,6 +564,7 @@ async function playCard(card, player, color) {
     });
     if (response.ok) {
         let result = await response.json();
+        console.log(result);
 
         if (playerTurn.Name == result.Player) {
             endOfGame(result);
@@ -734,6 +740,11 @@ async function ziehen() {
     });
 
     if (response.ok) {
+        draw.classList.add("rotate-vert-center");
+        setTimeout(function() {
+            draw.classList.remove("rotate-vert-center");
+        }, 500);
+
         let result = await response.json();
         let tempPlayer = players.find(function(e) {
             return e.Name == result.Player;

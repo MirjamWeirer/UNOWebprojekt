@@ -357,10 +357,9 @@ async function getCardToPlay(e) {
         if (checkCard(cardToPlay) == true) {
             e.target.classList.add("rotate-diagonal-tl");
             setTimeout(function() {
-                // e.target.remove(e.target.parentNode);
+		// because the event is after handlig it not accessible anymore
+		// -> saving target and currentTarget in a variable to access it in setTimeout
                 cTarget.removeChild(target.parentNode);
-                console.log(e.target);
-                console.log(target);
                 e.target.classList.remove("shakrotate-diagonal-tleIt");
             }, 1000);
             removeCardFromArr(indexOfClicked);

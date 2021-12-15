@@ -530,7 +530,7 @@ function uno() {
     setTimeout(function(e) {
         unoMessage.classList.add('hiddenElement');
         unoMessage.classList.remove('shoutUno');
-    });
+    }, 3000);
 }
 
 //------------------------------------------------------------------------------

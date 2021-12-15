@@ -521,7 +521,7 @@ function endOfGame(result) {
     for (let i = 0; i < loosers.length; i++) {
         points += loosers[i].Score;
     }
-    document.getElementById("winnerMessage").firstChild.textContent = "Player " + playerTurn.Name + " won with " + points + " points.";
+    document.getElementById("winnerMessage").firstChild.textContent = "Spieler " + playerTurn.Name + " hat mit " + points + " Punkten gewonnen.";
 
     let modal = new bootstrap.Modal(document.getElementById("winnerModal"));
     modal.show();

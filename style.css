@@ -132,9 +132,9 @@ body {
     height: 100px;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 45%;
     margin-left: -200px;
-    color: #533a64;
+    color: #dbc1f0;
     animation: greet 3s ease-in-out forwards;
 }
 
@@ -196,7 +196,7 @@ body {
     top: 50%;
     left: 50%;
     margin-left: -200px;
-    color: #e751ec;
+    color: #dbc1f0;;
     animation: shout 3s ease-in-out forwards;
 }
 

@@ -351,9 +351,13 @@ async function getCardToPlay(e) {
         if (checkCard(cardToPlay) == true) {
             e.target.classList.add("rotate-diagonal-tl");
             setTimeout(function() {
-                // e.target.remove(e.target.parentNode);
+                e.target.remove(e.target.parentNode);
                 // e.currentTarget.removeChild(e.target.parentNode);
                 console.log(e.target);
+                console.log(e.target.parentNode);
+                console.log(e.target.parentNode.parentNode);
+                console.log(e.target.parentNode.children);
+                console.log(e.target.parentNode.parentNode.children);
                 e.target.classList.remove("shakrotate-diagonal-tleIt");
             }, 1000);
             removeCardFromArr(indexOfClicked);

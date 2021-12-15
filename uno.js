@@ -59,6 +59,7 @@ let topCard;
 let proceed = false;
 
 let target;
+let cTarget;
 
 //------------------------------------------------------------------------------
 //  Get the input form for the player names and draw piles and add event
@@ -341,7 +342,8 @@ async function getCardToPlay(e) {
     let parentUl = Array.from(e.target.parentNode.parentNode.children);
     let indexOfClicked = parentUl.indexOf(clicked);
     
-    target = e.currentTarget;
+    target = e.target;
+    cTarget = e.currentTarget;
 
     if (e.currentTarget.parentNode.firstElementChild.id != playerTurn.Name) {
         e.preventDefault;
@@ -355,8 +357,8 @@ async function getCardToPlay(e) {
         if (checkCard(cardToPlay) == true) {
             e.target.classList.add("rotate-diagonal-tl");
             setTimeout(function() {
-                e.target.remove(e.target.parentNode);
-                // e.currentTarget.removeChild(e.target.parentNode);
+                // e.target.remove(e.target.parentNode);
+                cTarget.removeChild(target.parentNode);
                 console.log(e.target);
                 console.log(target);
                 e.target.classList.remove("shakrotate-diagonal-tleIt");

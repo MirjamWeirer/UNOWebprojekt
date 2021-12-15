@@ -1,6 +1,7 @@
 # Unser Uno Projekt
 
-Das ist unser super tolles Uno Projekt (*Mirjam Weirer, Karoline Wild*)
+Das ist unser super tolles Uno Projekt! 
+(*Mirjam Weirer, Karoline Wild*)
 
 # Anforderungen - Das Unosystem...
 - [x] muss den SpielerInnen die Möglichkeit bieten 4 Namen einzugeben

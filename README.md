@@ -1,6 +1,7 @@
 # Unser Uno Projekt
 
-Das ist unser super tolles Uno Projekt.
+Das ist unser super tolles Uno Projekt! 
+(*Mirjam Weirer, Karoline Wild*)
 
 # Anforderungen - Das Unosystem...
 - [x] muss den SpielerInnen die Möglichkeit bieten 4 Namen einzugeben
@@ -25,43 +26,8 @@ Das ist unser super tolles Uno Projekt.
 - [x] soll nett aussehen
 
 ## Weitere Anforderungen (sind ein KANN):
-- [x] weitere Animationen
-- [ ] weiteres *bling bling* Aussehen
-- [x] Uno Ruf Funktionalität
-- [x] Spielregeln anzeigen
-- [x] Knöpfe um Spiel erneut zu starten
-
-## TODOs bis 11.11.:
-- [ ] css
-- [ ] eventlistener
-- [ ] currentplayer field (indexOf?)
-
-## Anmerkungen und Ideen
-- backface-visibility? leider nicht
-- für animationen siehe auch codepen Ideen (z.B. https://codepen.io/bitmapshades/pen/raOZMa) -coole idee
-- karte nach farbwunsch liegt nicht am richtigen platz
-- export/import functions (https://stackoverflow.com/questions/3809862/can-we-call-the-function-written-in-one-javascript-in-another-js-file)
-- lösung für mehr karten finden
-
-- CSS3 Media Query, Bootstrap Responsive Classes to scale web page according to screen resolution
-- Eingabe der Namen anpassen - zur Zeit sind Namen mit gleichem Beginn nicht erlaubt
-- laut ppt: Alle Karten Aktionen müssen animiert sein (!)
-
-
-- Firework source: https://codepen.io/hmaw/pen/qBEMLxV
-
-## Roadmap to WEB || Uno
- - 11.11. Ziel:
- - [x] Spieler*innennamen eingeben (nur unterschiedliche)
- - [x] Grundstruktur wie Daten gespeichert
- - [x] Spielstart vollständig (Karten am Tisch)
- - [x] Button Listner für Karten
- - [x] addEventListener auf UL, nicht LI
- - 18.11. Ziel:
- - [x] Karten spielen
- - [x] Karten hinzufügen/entfernen
- - 25.11. Ziel:
- - [ ] Sonderfälle abgedeck: Farbwechsel
- - 26.11. Ziel:
- - [ ] Animation vorhanden   
-
+- [x] weitere Animationen --> das ganze Spielfeld, Willkommen, UNO, Feuerwerk (bzw. Quelle ist im css ersichtlich), gleiche SpielerInnen Namen animiert, leere SpielerInnen Namen animiert
+- [ ] weiteres *bling bling* Aussehen --> zu subjektiv
+- [x] Uno Ruf Funktionalität --> nicht als Button-Click, sondern als Animation automatisch
+- [x] Spielregeln anzeigen --> offizielle Spielregeln im Footer verlinkt
+- [x] Knöpfe um Spiel erneut zu starten --> Knopf kommt am Ende des Spiels

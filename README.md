@@ -2,6 +2,35 @@
 
 Das ist unser super tolles Uno Projekt.
 
+# Anforderungen - Das Unosystem...
+- [ ] muss den SpielerInnen die Möglichkeit bieten 4 Namen einzugeben
+- [ ] muss gleiche SpielerInnen Namen verhindern
+- [ ] muss alle Karten aller SpielerInnen darstellen
+- [ ] muss nach einer SpielerInnen Aktion etwaige neue Karten darstellen bzw. alte Karten entfernen
+- [ ] muss alle Namen aller SpielerInnen darstellen
+- [ ] muss die Punkte aller SpielerInnen darstellen
+- [ ] muss nach einer SpielerInnen Aktion etwaige Punkteveränderungen darstellen
+- [ ] muss aktive/n SpielerIn visuell hervorheben
+- [ ] muss die aufgedeckte Karte darstellen
+- [ ] muss für die aktive Spielerin / den aktiven Spieler die Möglichkeit bieten eine Karte zu spielen
+- [ ] muss das Spielen einer Karte animieren
+- [ ] muss nach dem Spielen einer Karte die aufgedeckte Karte aktualisieren
+- [ ] muss für die aktive Spielerin / den aktiven Spieler die Möglichkeit bieten eine Karte abzuheben
+- [ ] muss das Abheben einer Karte animieren
+- [ ] muss ungültige Aktionen animieren
+- [ ] muss das Spiel beenden und SiegerIn visualisieren, wenn eine Person keine Karten mehr besitzt
+- [ ] muss die Wahl einer Farbe erlauben, wenn eine Uno Sonderkarte gespielt wurde
+- [ ] muss die gewählte Farbe nach einer Farbwahl visualisieren
+- [ ] soll unnötige Anfragen an den Server verhindern (z.B. falsche Karte gespielt, nicht aktive SpielerIn versucht Karte zu spielen)
+- [ ] soll nett aussehen
+
+## Weitere Anforderungen (sind ein KANN):
+- [ ] weitere Animationen
+- [ ] weiteres *bling bling* Aussehen
+- [ ] Uno Ruf Funktionalität
+- [ ] Spielregeln anzeigen
+- [ ] Knöpfe um Spiel erneut zu starten
+
 ## TODOs bis 11.11.:
 - [ ] css
 - [ ] eventlistener
